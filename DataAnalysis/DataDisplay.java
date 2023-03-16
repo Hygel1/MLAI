@@ -51,7 +51,7 @@ public class DataDisplay {
         StdDraw.setYscale(0,h);
         for(int i=0;i<data.size();i++){
             StdDraw.setPenColor((int)data.get(i)[2],(int)data.get(i)[2],(int)data.get(i)[2]);
-            StdDraw.filledCircle(data.get(i)[1], -data.get(i)[0], 5);
+            StdDraw.filledCircle(data.get(i)[1], data.get(i)[0], 5);
         }
         StdDraw.show();
     }

@@ -1,16 +1,10 @@
 {
-    "java.project.referencedLibraries": {
-        "include": [
-            "lib/**/*.jar",
-            "stdlib.jar",
-            "DataAnalysis/lib/stdlib.jar"
-        ],
-        "exclude": [
-            "lib/stdlib.jar"
-        ]
-    },
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ],
     "java.project.sourcePaths": [
-        "DataAnalysis/lib",
-        "DataAnalysis/src"
+        ".",
+        "lib",
+        "DataAnalysis"
     ]
 }

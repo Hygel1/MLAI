@@ -1,0 +1,4 @@
+packages won't inherit libraries from the master (default package)
+you either have to put the library in the specific package or add the package to the classpath to
+    let it use the directory in the code
+Add to classpath by adding the path to the java.project.sourcepath JSON element and saving (won't make the change until the file has actually been saved)

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DataReader {
-    public ArrayList<Double> getOneData(String path){
+    public ArrayList<Double> read1D(String path){
         ArrayList<Double> output=new ArrayList<>();
         try{
             File file=new File(path);
@@ -26,7 +26,7 @@ public class DataReader {
                 String[] h=sc.nextLine().split(", ");
                 rtn.add(new City(h[0], Integer.valueOf(h[1]), Integer.valueOf(h[2])));
             }
-            sc.reset();
+            sc.close();sc=new Scanner(file);
             while(sc.hasNext()){
                 String[] h=sc.nextLine().split(", ");
                 try{

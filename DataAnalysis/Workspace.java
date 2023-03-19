@@ -3,8 +3,8 @@ public class Workspace{
     public static void main(String[] args){
     DataReader reader=new DataReader();
     DataDisplay display=new DataDisplay();
-    String path="DataAnalysis\\ThreeDData_02.txt";
-    ArrayList<double[]> data=reader.read3D(path);
-    display.display3D(data);
+    String path="DataAnalysis\\MysteryData.txt";
+    ArrayList<City> data=reader.readMysteryData(path);
+    display.displayMystery(data);
     }
 }

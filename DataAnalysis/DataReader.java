@@ -1,7 +1,7 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Arrays;
+
 public class DataReader {
     public ArrayList<Double> getOneData(String path){
         ArrayList<Double> output=new ArrayList<>();
@@ -17,14 +17,33 @@ public class DataReader {
         catch(Exception e){e.printStackTrace();}
         return output;
     }
-    public ArrayList<Point> makePointList(String path){
-        ArrayList<Point> rtn=new ArrayList<>();
+    public ArrayList<City> readMysteryData(String path){
+        ArrayList<City> rtn=new ArrayList<>();
         try{
             File file=new File(path);
             Scanner sc=new Scanner(file);
             while(sc.hasNext()){
-                String[] hold=sc.nextLine().split(", ");
-                rtn.add(new Point(hold[0],Double.valueOf(hold[1]),Double.valueOf(hold[2])));
+                String[] h=sc.nextLine().split(", ");
+                rtn.add(new City(h[0], Integer.valueOf(h[1]), Integer.valueOf(h[2])));
+            }
+            sc.reset();
+            while(sc.hasNext()){
+                String[] h=sc.nextLine().split(", ");
+                try{
+                    int r=Integer.MAX_VALUE;
+                    for(int n=0;n<rtn.size();n++){
+                        if(rtn.get(n).getName().equals(h[0])){ r=n;break;}
+                    }
+                    for(int i=3;i<h.length;i+=2){
+                        int w=Integer.MAX_VALUE;
+                        for(int a=0;a<rtn.size();a++){
+                            if(rtn.get(a).getName().equals(h[i])){
+                                w=a;break;
+                            }
+                        }
+                        rtn.get(r).addRelated(new related(rtn.get(w), Integer.valueOf(h[i+1])));
+                    }
+                }catch(Exception e){e.printStackTrace();}
             }
             sc.close();
         }catch(Exception e){e.printStackTrace();}
@@ -42,7 +61,6 @@ public class DataReader {
             sc.close();
         }catch(Exception e){e.printStackTrace();}
         return rtn;
-
     }
     public ArrayList<double[]> read3D(String path){
         ArrayList<double[]> rtn=new ArrayList<>();

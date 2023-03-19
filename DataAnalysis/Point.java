@@ -6,13 +6,7 @@ public class Point{
         this.p1=p1;
         this.p2=p2;
     }
-    public double getP1(){
-        return p1;
-    }
-    public double getP2(){
-        return p2;
-    }
-    public String getName(){
-        return name;
-    }
+    public double getP1(){return p1;}
+    public double getP2(){return p2;}
+    public String getName(){return name;}
 }

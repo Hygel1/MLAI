@@ -19,15 +19,22 @@ public class DataDisplay {
             StdAudio.play(i);
         }
     }
-    public void displayMystery(ArrayList<Point> data){
-        int h=400,w=1000;
+    public void displayMystery(ArrayList<City> data){
+        int h=1000,w=1000;
         StdDraw.enableDoubleBuffering();
         StdDraw.setCanvasSize(w,h);
         StdDraw.setXscale(0,w);
         StdDraw.setYscale(0,h);
         for(int i=0;i<data.size();i++){
             StdDraw.setPenColor(StdDraw.BLUE);
-            StdDraw.filledCircle(data.get(i).getP1(),data.get(i).getP2(),5);
+            StdDraw.filledCircle(data.get(i).getp1(),data.get(i).getp2(),5);
+            StdDraw.text(data.get(i).getp1(),data.get(i).getp2()-10,data.get(i).getName());
+        }
+        for(int i=0;i<data.size();i++){
+            for(int n=0;n<data.get(i).relSize();n++){
+                StdDraw.setPenColor(StdDraw.RED);
+                StdDraw.line(data.get(i).getp1(), data.get(i).getp2(), data.get(i).getRel(n).getp1(), data.get(i).getRel(n).getp2());
+            }
         }
         StdDraw.show();
     }

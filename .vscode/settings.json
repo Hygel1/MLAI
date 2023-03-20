@@ -5,7 +5,8 @@
     "java.project.sourcePaths": [
         ".",
         "lib",
-        "DataAnalysis",
-        "Assignment00_LibraryTest"
+        "Assignment02_DataAnalysis",
+        "Assignment00_LibraryTest",
+        "Assignment03_BreadthFirstSearch"
     ]
 }

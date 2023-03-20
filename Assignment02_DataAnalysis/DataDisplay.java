@@ -1,6 +1,17 @@
 import java.util.ArrayList;
 public class DataDisplay {
     public void displayOneD(ArrayList<Double> data){
+        int h=800,w=2000;
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setCanvasSize(w,h);
+        StdDraw.setXscale(0,w);
+        StdDraw.setYscale(-1,1);
+
+        for(int i=0;i<data.size();i++){
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.filledCircle(i*10, data.get(i), .5);;
+        }
+        StdDraw.show();
         for(double i:data){ //play the audio from each point
             StdAudio.play(i);
         }

@@ -4,7 +4,9 @@ public class Workspace{
     DataReader reader=new DataReader();
     DataDisplay display=new DataDisplay();
     String[] path={"DataAnalysis\\OneDData_02_long.txt","DataAnalysis\\TwoDData_02_long.txt","DataAnalysis\\ThreeDData_02.txt","DataAnalysis\\MysteryData.txt"};
-    ArrayList<City> data=reader.readMysteryData(path[3]);
-    display.displayMystery(data);
+    //ArrayList<City> data=reader.readMysteryData(path[3]);
+    //display.displayMystery(data);
+    ArrayList<Double> data=reader.read1D(path[0]);
+    display.displayOneD(data);
     }
 }

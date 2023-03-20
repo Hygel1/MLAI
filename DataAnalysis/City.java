@@ -29,4 +29,10 @@ public class City {
     public City getRel(int n){
         return rel.get(n).getCity();
     }
+    public String toString(){
+        return name+" "+p1+", "+p2;
+    }
+    public boolean equals(City c){
+        return c.getName().equals(name);
+    }
 }

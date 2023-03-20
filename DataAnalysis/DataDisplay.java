@@ -18,6 +18,8 @@ public class DataDisplay {
             for(int n=0;n<data.get(i).relSize();n++){ //draw line to each related city
                 StdDraw.setPenColor(StdDraw.RED);
                 StdDraw.line(data.get(i).getp1(), data.get(i).getp2(), data.get(i).getRel(n).getp1(), data.get(i).getRel(n).getp2());
+                StdDraw.setPenColor(StdDraw.BLACK);
+                StdDraw.text((data.get(i).getp1()+data.get(i).getRel(n).getp1())/2,(data.get(i).getp2()+data.get(i).getRel(n).getp2())/2,data.get(i).getRelatedDistance(n)+"");
             }
         }
         StdDraw.show();

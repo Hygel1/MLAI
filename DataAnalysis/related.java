@@ -11,4 +11,7 @@ public class related{
     public City getCity(){
         return city;
     }
+    public String toString(){
+        return city.getName()+" is "+distance+" away";
+    }
 }

@@ -18,6 +18,7 @@ public class Tester_00 {
                 String line=input.nextLine();
                 System.out.println(line);
             }
+            input.close();
         }
         catch(Exception e){}
     }

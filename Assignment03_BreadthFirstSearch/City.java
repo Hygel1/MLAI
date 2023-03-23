@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-public class City {
+public class City{
     private String name;
     private int p1,p2;
     private ArrayList<related> rel=new ArrayList<>();
@@ -32,6 +32,11 @@ public class City {
     public String toString(){
         return name+" "+p1+", "+p2;
     }
+    /**
+     * compares names
+     * @param c
+     * @return
+     */
     public boolean equals(City c){
         return c.getName().equals(name);
     }

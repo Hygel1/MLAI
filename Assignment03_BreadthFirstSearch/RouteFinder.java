@@ -1,13 +1,12 @@
 import java.util.ArrayList;
 import java.io.File;
 import java.util.Scanner;
+
 public class RouteFinder {
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
-        System.out.println(breadDistance(data, data.get(0),data.get(data.size()-1)));
-         displayMap(data);
-        
-
+        System.out.println(breadDistance(data, data.get(0),data.get(13)));
+        displayMap(data);
     }
     /**
      * takes ArrayList of City classes and displays map according to data
@@ -86,18 +85,16 @@ public class RouteFinder {
             frontier.add(hold);
         }
         if(frontier.size()==0) return null;//if frontier starts empty, start city has no related cities, return null (failed)
-        int p=0;
-        while(p<frontier.size()){
-            for(int i=0;i<frontier.get(p).get(frontier.get(p).size()-1).relSize();i++){ //for every rel city of the last city of the first direction in frontier...
-                if(!visited.contains(frontier.get(p).get(frontier.get(p).size()-1).getRel(i))){ //if the city hasn't been visited yet...
-                    frontier.add(new ArrayList<>(frontier.get(0)));frontier.get(frontier.size()-1).add(frontier.get(p).get(frontier.get(p).size()-1).getRel(i)); //append frontier with a new direction including the unvisited rel city 
+        while(0<frontier.size()){
+            for(int i=0;i<frontier.get(0).get(frontier.get(0).size()-1).relSize();i++){ //for every rel city of the last city of the first direction in frontier...
+                if(!visited.contains(frontier.get(0).get(frontier.get(0).size()-1).getRel(i))){ //if the city hasn't been visited yet...       
+                    visited.add(frontier.get(0).get(frontier.get(0).size()-1).getRel(i));    
+                    frontier.add(new ArrayList<>(frontier.get(0)));frontier.get(frontier.size()-1).add(frontier.get(0).get(frontier.get(0).size()-1).getRel(i)); //append frontier with a new direction including the unvisited rel city                   
                     if(frontier.get(frontier.size()-1).get(frontier.get(frontier.size()-1).size()-1).equals(end)) return frontier.get(frontier.size()-1); //if the last checked city is the final destination, return the last made direction set
                 }
             }
             frontier.remove(0);
         }
         return null; //if final destination wasn't found, return null (failed)
-
-
     }
 }

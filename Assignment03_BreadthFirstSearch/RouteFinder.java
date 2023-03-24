@@ -6,9 +6,12 @@ public class RouteFinder {
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
         ArrayList<City> route=findPathBreadthFirst(data, data.get(0),data.get(13));
+        ArrayList<City> route1=uniformCost(data, data.get(0), data.get(13));
         System.out.println(route);
+        System.out.println(route1);
         displayMap(data);
-        displayRouteSequence(route);
+
+        //displayRouteSequence(route);
     }
     /**
      * traces route defined in c
@@ -130,5 +133,43 @@ public class RouteFinder {
             frontier.remove(0);
         }
         return null; //if final destination wasn't found, return null (failed)
+    }
+    /**
+     * returns the best path from start to end using distance between cities as cost rather then node count
+     * @param c
+     * @param start
+     * @param end
+     * @return
+     */
+    public static ArrayList<City> uniformCost(ArrayList<City> c, City start, City end){
+        if(start.equals(end)) return null;
+        ArrayList<City> visited=new ArrayList<>();
+        visited.add(start);
+        ArrayList<Integer> finalD=new ArrayList<>();
+        ArrayList<ArrayList<City>> finalR=new ArrayList<>();
+        ArrayList<ArrayList<City>> frontier=new ArrayList<>();
+        ArrayList<Integer> distances=new ArrayList<>();
+        for(int i=0;i<start.relSize();i++){
+            frontier.add(new ArrayList<>());
+            frontier.get(i).add(start);
+            frontier.get(i).add(start.getRel(i));
+            distances.add(start.getRelatedDistance(i));
+        }
+        if(frontier.size()==0) return null;
+        while(0<frontier.size()){
+            for(int i=0;i<frontier.get(0).get(frontier.get(0).size()-1).relSize();i++){
+                if(!visited.contains(frontier.get(0).get(frontier.get(0).size()-1).getRel(i))){
+                    visited.add(frontier.get(0).get(frontier.get(0).size()-1).getRel(i));
+                    frontier.add(new ArrayList<>(frontier.get(0)));frontier.get(frontier.size()-1).add(frontier.get(0).get(frontier.get(0).size()-1).getRel(i));
+                    distances.add(distances.get(0)+frontier.get(0).get(frontier.get(0).size()-1).getRelatedDistance(i));
+                    if(frontier.get(frontier.size()-1).get(frontier.get(frontier.size()-1).size()-1).equals(end)){ finalR.add(frontier.get(frontier.size()-1));finalD.add(distances.get(0)+frontier.get(0).get(frontier.get(0).size()-1).getRelatedDistance(i));break;}
+            }
+            }
+            frontier.remove(0);distances.remove(0);
+        }
+        if(finalD.size()==0) return new ArrayList<City>(); //catching on this line, which likely means that 154 is not being activated properly
+        int min=0;
+        for(int i=1;i<finalD.size();i++) min=Math.min(finalD.get(min),finalD.get(i));
+        return finalR.get(min);
     }
 }

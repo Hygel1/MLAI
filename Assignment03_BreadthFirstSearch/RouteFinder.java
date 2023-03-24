@@ -5,8 +5,41 @@ import java.util.Scanner;
 public class RouteFinder {
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
-        System.out.println(breadDistance(data, data.get(0),data.get(13)));
+        ArrayList<City> route=findPathBreadthFirst(data, data.get(0),data.get(13));
+        System.out.println(route);
         displayMap(data);
+        displayRouteSequence(route);
+    }
+    /**
+     * traces route defined in c
+     * @param c
+     */
+    public static void displayRoute(ArrayList<City> c){
+        StdDraw.setPenRadius(.01);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        for(int i=0;i<c.size()-1;i++){
+            StdDraw.line(c.get(i).getp1(),c.get(i).getp2(),c.get(i+1).getp1(),c.get(i+1).getp2());
+        }
+        StdDraw.show();
+        StdDraw.setPenRadius(.005);
+    }
+    /**
+     * draws line between adjacent points in c
+     * should add 1 second intervals between lines but doesn't work 
+     * @param c route to be traced
+     */
+    public static void displayRouteSequence(ArrayList<City> c){
+        StdDraw.setPenRadius(.01);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        Object o=new Object();
+        for(int i=0;i<c.size()-1;i++){
+           try{
+            o.wait(1000);
+           }catch(Exception e){}
+            StdDraw.line(c.get(i).getp1(),c.get(i).getp2(),c.get(i+1).getp1(),c.get(i+1).getp2());
+            StdDraw.show();
+        }
+        StdDraw.setPenRadius(.005);
     }
     /**
      * takes ArrayList of City classes and displays map according to data
@@ -18,6 +51,7 @@ public class RouteFinder {
         StdDraw.setCanvasSize(w,h);
         StdDraw.setXscale(0,w);
         StdDraw.setYscale(0,h);
+        StdDraw.setPenRadius(.005);
         for(int i=0;i<data.size();i++){
             StdDraw.setPenColor(StdDraw.BLUE);
             StdDraw.filledCircle(data.get(i).getp1(),data.get(i).getp2(),5);
@@ -75,7 +109,7 @@ public class RouteFinder {
      * @param end city to end at
      * @return shortest path (by node count) from start to end
      */
-    public static ArrayList<City> breadDistance(ArrayList<City> cities, City start, City end){
+    public static ArrayList<City> findPathBreadthFirst(ArrayList<City> cities, City start, City end){
         if(start.equals(end)) return new ArrayList<City>();
         ArrayList<City> visited=new ArrayList<>();
         visited.add(start);

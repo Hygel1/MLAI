@@ -29,6 +29,9 @@ public class City{
     public City getRel(int n){
         return rel.get(n).getCity();
     }
+    public related getRelated(int n){
+        return rel.get(n);
+    }
     public String toString(){
         return name+" "+p1+", "+p2;
     }

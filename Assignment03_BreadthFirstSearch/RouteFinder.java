@@ -1,17 +1,17 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.io.File;
 import java.util.Scanner;
 
+import java.util.Queue;
 public class RouteFinder {
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
-        ArrayList<City> route=findPathBreadthFirst(data, data.get(0),data.get(13));
-        ArrayList<City> route1=uniformCost(data, data.get(0), data.get(13));
-        System.out.println(route);
-        System.out.println(route1);
+        ArrayList<City> breadRoute=findPathBreadthFirst(data, data.get(0),data.get(13));
+        ArrayList<City> uniformRoute=uniformCost(data, data.get(0), data.get(13));
+        System.out.println(breadRoute);
+        System.out.println(uniformRoute);
         displayMap(data);
-
-        //displayRouteSequence(route);
     }
     /**
      * traces route defined in c
@@ -141,35 +141,23 @@ public class RouteFinder {
      * @param end
      * @return
      */
-    public static ArrayList<City> uniformCost(ArrayList<City> c, City start, City end){
-        if(start.equals(end)) return null;
-        ArrayList<City> visited=new ArrayList<>();
-        visited.add(start);
-        ArrayList<Integer> finalD=new ArrayList<>();
-        ArrayList<ArrayList<City>> finalR=new ArrayList<>();
-        ArrayList<ArrayList<City>> frontier=new ArrayList<>();
-        ArrayList<Integer> distances=new ArrayList<>();
+    public Queue<City> uniformCost(ArrayList<City> cities, City start, City end){
+        LinkedList<Route> frontier=new LinkedList<>();
+        LinkedList<City> explored=new LinkedList<>();
         for(int i=0;i<start.relSize();i++){
-            frontier.add(new ArrayList<>());
-            frontier.get(i).add(start);
-            frontier.get(i).add(start.getRel(i));
-            distances.add(start.getRelatedDistance(i));
+            frontier.add(new Route(start));
+            frontier.get(0).add(start.getRel(i));
+            frontier.get(0).addDistance(start.getRelatedDistance(i));
         }
-        if(frontier.size()==0) return null;
-        while(0<frontier.size()){
-            for(int i=0;i<frontier.get(0).get(frontier.get(0).size()-1).relSize();i++){
-                if(!visited.contains(frontier.get(0).get(frontier.get(0).size()-1).getRel(i))){
-                    visited.add(frontier.get(0).get(frontier.get(0).size()-1).getRel(i));
-                    frontier.add(new ArrayList<>(frontier.get(0)));frontier.get(frontier.size()-1).add(frontier.get(0).get(frontier.get(0).size()-1).getRel(i));
-                    distances.add(distances.get(0)+frontier.get(0).get(frontier.get(0).size()-1).getRelatedDistance(i));
-                    if(frontier.get(frontier.size()-1).get(frontier.get(frontier.size()-1).size()-1).equals(end)){ finalR.add(frontier.get(frontier.size()-1));finalD.add(distances.get(0)+frontier.get(0).get(frontier.get(0).size()-1).getRelatedDistance(i));break;}
-            }
-            }
-            frontier.remove(0);distances.remove(0);
+        while(frontier.size()>0){
+            
+            
         }
-        if(finalD.size()==0) return new ArrayList<City>(); //catching on this line, which likely means that 154 is not being activated properly
-        int min=0;
-        for(int i=1;i<finalD.size();i++) min=Math.min(finalD.get(min),finalD.get(i));
-        return finalR.get(min);
+    }
+    public int frontierShort(LinkedList<Route> r){
+        int ref=0;
+        for(int i=1;i<r.size();i++) if(r.get(ref).distance()>r.get(i).distance()) ref=i;
+        return ref;
     }
 }
+

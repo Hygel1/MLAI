@@ -2,14 +2,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.io.File;
 import java.util.Scanner;
-
+import java.util.Stack;
 import java.util.Queue;
 public class RouteFinder {
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
-        ArrayList<City> breadRoute=findPathBreadthFirst(data, data.get(0),data.get(13));
-        ArrayList<City> uniformRoute=uniformCost(data, data.get(0), data.get(13));
-        System.out.println(breadRoute);
+        //ArrayList<City> breadRoute=findPathBreadthFirst(data, data.get(0),data.get(13));
+        System.out.println(1);
+        Stack<City> uniformRoute=uniformCost(data, data.get(0), data.get(13));
+        System.out.println("2");
+        //System.out.println(breadRoute);
         System.out.println(uniformRoute);
         displayMap(data);
     }
@@ -141,23 +143,66 @@ public class RouteFinder {
      * @param end
      * @return
      */
-    public Queue<City> uniformCost(ArrayList<City> cities, City start, City end){
+    public static Stack<City> uniformCost(ArrayList<City> cities, City start, City end){
         LinkedList<Route> frontier=new LinkedList<>();
         LinkedList<City> explored=new LinkedList<>();
+        Stack<Route> possible=new Stack<>();
         for(int i=0;i<start.relSize();i++){
             frontier.add(new Route(start));
             frontier.get(0).add(start.getRel(i));
             frontier.get(0).addDistance(start.getRelatedDistance(i));
         }
         while(frontier.size()>0){
-            
-            
+            for(int i=0;i<frontier.get(0).numSteps();i++){
+                Route rte=new Route(frontier.pop(),frontier.get(0).nextStep());
+                if(rte.peek().equals(end)) possible.add(rte);
+                else if(!explored.contains(rte.peek())&&!rte.has(rte.peek())){
+                    frontier.add(rte);
+                    frontier.get(0).stepAdv();
+                }
+                else{
+                    ArrayList<Integer> h=frontierHas(frontier, rte);
+                    for(int n=0;n<h.size();n++) frontier.remove((int)h.get(n));
+                }
+            }          
         }
+        if(possible.size()==0) return null;
+        Route min=possible.pop();
+        for(int i=0;i<possible.size();i++){
+            if(min.distance()>possible.peek().distance()) min=possible.pop(); else possible.pop();
+        }
+        return min;
     }
-    public int frontierShort(LinkedList<Route> r){
-        int ref=0;
-        for(int i=1;i<r.size();i++) if(r.get(ref).distance()>r.get(i).distance()) ref=i;
-        return ref;
+    /**
+     * try again, other method has infinite loop somewhere and i don't really want to fix it
+     * @param c
+     * @param start
+     * @param end
+     * @return
+     */
+    public static Stack<City> uni(ArrayList<City> c, City start, City end){
+        City node=start;
+        LinkedList<Route> frontier=new LinkedList<>(); frontier.add(new Route(start));
+        ArrayList<City> explored=new ArrayList<>(); explored.add(start);
+        while(frontier.size()>0){
+            related r=frontier.peek().nextStep();
+            if(!explored.contains(r.getCity())||);            
+        }
+        
+
+
+        return null;
+    }
+    public static ArrayList<Integer> frontierHas(LinkedList<Route> r,Route rt){
+        ArrayList<Integer> i=new ArrayList<>();
+        for(int n=1;n<r.size();n++){ 
+            if(r.getFirst().peek().equals(rt.peek())){  
+                if(r.getFirst().distance()<=rt.distance()) return null;//if the route being tested is no the most efficient way to get to the destination, return null
+                else i.add(n); //if there is another route at the same destination with less efficiency, add its index to the list
+            }
+        }
+        return i;
     }
 }
+
 

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.io.File;
 import java.util.Scanner;
 import java.util.Stack;
@@ -7,12 +8,11 @@ import java.util.Queue;
 public class RouteFinder {
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
-        //ArrayList<City> breadRoute=findPathBreadthFirst(data, data.get(0),data.get(13));
         System.out.println(1);
-        Stack<City> uniformRoute=uniformCost(data, data.get(0), data.get(13));
+        //ArrayList<City> rte=findPathBreadthFirst(data, data.get(0),data.get(13));
+        Route rte=uniformCost(data, data.get(0), data.get(13));
         System.out.println("2");
-        //System.out.println(breadRoute);
-        System.out.println(uniformRoute);
+        System.out.println(rte);
         displayMap(data);
     }
     /**
@@ -99,7 +99,7 @@ public class RouteFinder {
                                 w=a;break;
                             }
                         }
-                        rtn.get(r).addRelated(new related(rtn.get(w), Integer.valueOf(h[i+1])));
+                        rtn.get(r).addRelated(new Neighbor(rtn.get(w), Integer.valueOf(h[i+1])));
                     }
                 }catch(Exception e){e.printStackTrace();}
             }
@@ -136,72 +136,33 @@ public class RouteFinder {
         }
         return null; //if final destination wasn't found, return null (failed)
     }
-    /**
-     * returns the best path from start to end using distance between cities as cost rather then node count
-     * @param c
-     * @param start
-     * @param end
-     * @return
-     */
-    public static Stack<City> uniformCost(ArrayList<City> cities, City start, City end){
-        LinkedList<Route> frontier=new LinkedList<>();
-        LinkedList<City> explored=new LinkedList<>();
-        Stack<Route> possible=new Stack<>();
-        for(int i=0;i<start.relSize();i++){
-            frontier.add(new Route(start));
-            frontier.get(0).add(start.getRel(i));
-            frontier.get(0).addDistance(start.getRelatedDistance(i));
-        }
+    public static Route uniformCost(ArrayList<City> cities, City start, City end){
+        ArrayList<City> explored=new ArrayList<>();
+        PriorityQueue<Route> frontier=new PriorityQueue<>();
+        frontier.add(new Route(start));
+        explored.add(start);
+        PriorityQueue<Route> possible=new PriorityQueue<>();
         while(frontier.size()>0){
-            for(int i=0;i<frontier.get(0).numSteps();i++){
-                Route rte=new Route(frontier.pop(),frontier.get(0).nextStep());
-                if(rte.peek().equals(end)) possible.add(rte);
-                else if(!explored.contains(rte.peek())&&!rte.has(rte.peek())){
-                    frontier.add(rte);
-                    frontier.get(0).stepAdv();
-                }
+            for(int p=0;p<frontier.peek().peek().relSize();p++){
+                Neighbor node=frontier.peek().nextStep();
+                Route rte=new Route(frontier.peek(),node);
+                if(node.getCity().equals(end)) possible.add(rte);
                 else{
-                    ArrayList<Integer> h=frontierHas(frontier, rte);
-                    for(int n=0;n<h.size();n++) frontier.remove((int)h.get(n));
+                    if(!explored.contains(node.getCity())) explored.add(node.getCity());
+                    optimizeRoutes(frontier, rte);
+                    
                 }
-            }          
+            }frontier.remove();
         }
-        if(possible.size()==0) return null;
-        Route min=possible.pop();
-        for(int i=0;i<possible.size();i++){
-            if(min.distance()>possible.peek().distance()) min=possible.pop(); else possible.pop();
-        }
-        return min;
+        if(frontier.size()==0)return null;
+        else return possible.peek();
     }
-    /**
-     * try again, other method has infinite loop somewhere and i don't really want to fix it
-     * @param c
-     * @param start
-     * @param end
-     * @return
-     */
-    public static Stack<City> uni(ArrayList<City> c, City start, City end){
-        City node=start;
-        LinkedList<Route> frontier=new LinkedList<>(); frontier.add(new Route(start));
-        ArrayList<City> explored=new ArrayList<>(); explored.add(start);
-        while(frontier.size()>0){
-            related r=frontier.peek().nextStep();
-            if(!explored.contains(r.getCity())||);            
+    public static void optimizeRoutes(PriorityQueue<Route> r, Route rte){
+        Object[] com=r.toArray();
+        for(int i=0;i<com.length;i++){
+            if(((Route)com[i]).distance()>rte.distance()&&((Route)com[i]).peek().equals(rte.peek())) r.remove((Route)com[i]);
         }
-        
-
-
-        return null;
-    }
-    public static ArrayList<Integer> frontierHas(LinkedList<Route> r,Route rt){
-        ArrayList<Integer> i=new ArrayList<>();
-        for(int n=1;n<r.size();n++){ 
-            if(r.getFirst().peek().equals(rt.peek())){  
-                if(r.getFirst().distance()<=rt.distance()) return null;//if the route being tested is no the most efficient way to get to the destination, return null
-                else i.add(n); //if there is another route at the same destination with less efficiency, add its index to the list
-            }
-        }
-        return i;
+        r.add(rte);
     }
 }
 

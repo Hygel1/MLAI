@@ -2,7 +2,7 @@ import java.util.ArrayList;
 public class City{
     private String name;
     private int p1,p2;
-    private ArrayList<related> rel=new ArrayList<>();
+    private ArrayList<Neighbor> rel=new ArrayList<>();
     public City(String name, int p1, int p2){
         this.name=name;
         this.p1=p1;
@@ -17,7 +17,7 @@ public class City{
     public int getp2(){
         return p2;
     }
-    public void addRelated(related r){
+    public void addRelated(Neighbor r){
         rel.add(r);
     }
     public int getRelatedDistance(int n){
@@ -29,7 +29,7 @@ public class City{
     public City getRel(int n){
         return rel.get(n).getCity();
     }
-    public related getRelated(int n){
+    public Neighbor getRelated(int n){
         return rel.get(n);
     }
     public String toString(){

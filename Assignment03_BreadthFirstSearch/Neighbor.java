@@ -1,7 +1,7 @@
-public class related{
+public class Neighbor{
     private City city;
     private int distance;
-    public related(City city, int distance){
+    public Neighbor(City city, int distance){
         this.city=city;
         this.distance=distance;
     }

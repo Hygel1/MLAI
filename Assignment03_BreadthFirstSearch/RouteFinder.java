@@ -9,11 +9,12 @@ public class RouteFinder {
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
         System.out.println(1);
+        displayMap(data);
         //ArrayList<City> rte=findPathBreadthFirst(data, data.get(0),data.get(13));
         Route rte=uniformCost(data, data.get(0), data.get(13));
         System.out.println("2");
         System.out.println(rte);
-        displayMap(data);
+        
     }
     /**
      * traces route defined in c
@@ -145,22 +146,29 @@ public class RouteFinder {
         while(frontier.size()>0){
             for(int p=0;p<frontier.peek().peek().relSize();p++){
                 Neighbor node=frontier.peek().nextStep();
-                Route rte=new Route(frontier.peek(),node);
-                if(node.getCity().equals(end)) possible.add(rte);
-                else{
-                    if(!explored.contains(node.getCity())) explored.add(node.getCity());
-                    optimizeRoutes(frontier, rte);
-                    
+                if(!frontier.peek().contains(node.getCity())){
+                    Route rte=new Route(frontier.peek(),node);
+                    if(node.getCity().equals(end)) possible.add(rte);
+                    else{
+                        if(!explored.contains(node.getCity())){
+                            explored.add(node.getCity());
+                            frontier.add(rte);
+                        }
+                        else optimizeRoutes(frontier, rte);
+                    }
                 }
-            }frontier.remove();
+            }
+            frontier.remove();
         }
-        if(frontier.size()==0)return null;
+        if(possible.size()==0)return null;
         else return possible.peek();
     }
     public static void optimizeRoutes(PriorityQueue<Route> r, Route rte){
         Object[] com=r.toArray();
         for(int i=0;i<com.length;i++){
-            if(((Route)com[i]).distance()>rte.distance()&&((Route)com[i]).peek().equals(rte.peek())) r.remove((Route)com[i]);
+            if(((Route)com[i]).distance()>rte.distance()&&((Route)com[i]).peek().equals(rte.peek())){
+                r.remove((Route)com[i]);
+            }
         }
         r.add(rte);
     }

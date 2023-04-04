@@ -1,24 +1,33 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.io.File;
 import java.util.Scanner;
-import java.util.Stack;
-import java.util.Queue;
 public class RouteFinder {
-    static int universalstepkounter333=0;
+    static int stepCounter=0;
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
         System.out.println(1);
         displayMap(data);
         //ArrayList<City> rte=findPathBreadthFirst(data, data.get(0),data.get(13));
-        Route rte=uniformCost(data, data.get(0), data.get(13));
-        Route rte2=aStarSearch(data, data.get(0), data.get(13));
+        Route rte=uniformCost(data, data.get(2), data.get(12));
+        Route rte2=aStarSearch(data, data.get(10), data.get(5));
         System.out.println("2");
         System.out.println(rte);
-        System.out.println(universalstepkounter333);
+        System.out.println(stepCounter);
         System.out.println(rte2);
-        System.out.println(universalstepkounter333);
+        System.out.println(stepCounter);
+    }
+    public static void visualizer(Route r){
+        Route rte=new Route(r);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        while(rte.size()>1){
+            StdDraw.line(rte.peek().getp1(),rte.pop().getp2(),rte.peek().getp1(),rte.peek().getp2());
+        }
+        StdDraw.setPenColor(StdDraw.RED);
+        while(rte.size()>1){
+            StdDraw.line(rte.peek().getp1(),rte.pop().getp2(),rte.peek().getp1(),rte.peek().getp2());
+        }
+        StdDraw.show(500);
     }
     /**
      * traces route defined in c
@@ -112,6 +121,38 @@ public class RouteFinder {
         }catch(Exception e){e.printStackTrace();}
         return rtn;
     }
+    public ArrayList<City> readMazeData(String path){
+        ArrayList<City> rtn=new ArrayList<City>();
+        try{
+            File f=new File(path);
+            Scanner s=new Scanner(f);
+            if(!s.nextLine().equals("maze")) throw new Exception("FileTypeException");
+            String[] holdVal;
+            String[] bounds=s.nextLine().split(" ");
+            int num=0;
+            while(s.hasNextLine()){
+                holdVal=s.nextLine().split(" ");
+                for(int i=0;i<holdVal.length;i++){
+                    if(holdVal[i].equals("1")) rtn.add(new City(num+", "+i,num,i));
+                }
+            }
+            //declare bounds (probably unnecessary tbh)
+            int[] bnds=new int[]{Integer.parseInt(bounds[0]),Integer.parseInt(bounds[1])};
+            //loop through declared "cities" and find out if there's a neighboring city (only 4 possible neighbors, vert/horizontal)
+            for(int i=0;i<rtn.size();i++){
+                int pnt[]=new int[]{rtn.get(i).getp1(),rtn.get(i).getp2()};
+                for(int n=0;n<rtn.size();n++){
+                    if(rtn.get(n).getp1()==pnt[0]+1&&rtn.get(n).getp2()==pnt[1]||rtn.get(n).getp1()==pnt[0]-1&&rtn.get(n).getp2()==pnt[1]||rtn.get(n).getp1()==pnt[0]&&rtn.get(n).getp2()==pnt[1]+1||rtn.get(n).getp1()==pnt[0]&&rtn.get(n).getp2()==pnt[1]-1){
+                        rtn.get(i).addRelated(new Neighbor(rtn.get(i), 1));
+                    }
+                }
+            }
+            
+        }
+        catch(Exception e){e.printStackTrace();};
+        return rtn;
+
+    }
     /**
      * takes an ArrayList of cites, one start city, and one end city; finds the shortest path by node count
      * @param cities cities to choose from
@@ -142,19 +183,25 @@ public class RouteFinder {
         return null; //if final destination wasn't found, return null (failed)
     }
     public static Route uniformCost(ArrayList<City> cities, City start, City end){
-        universalstepkounter333=0;
+        stepCounter=0;
         ArrayList<City> explored=new ArrayList<>();
         PriorityQueue<Route> frontier=new PriorityQueue<>();
         frontier.add(new Route(start));
         explored.add(start);
         PriorityQueue<Route> possible=new PriorityQueue<>();
         while(frontier.size()>0){
-           universalstepkounter333++;
-           for(int p=0;p<frontier.peek().peek().relSize();p++){     
-                Neighbor node=frontier.peek().nextStep();
+           stepCounter++;
+           //for(int p=0;p<frontier.peek().peek().relSize();p++){ 
+                Neighbor node=frontier.peek().getNextN();
+                while(node==null){
+                    try{throw new ArrayIndexOutOfBoundsException();} catch(Exception e){}
+                    frontier.remove();
+                    if(frontier.isEmpty()) break;
+                    node=frontier.peek().getNextN();
+                }
                 if(!frontier.peek().contains(node.getCity())){
                     Route rte=new Route(frontier.peek(),node);
-                    if(node.getCity().equals(end)) possible.add(rte);
+                    if(node.getCity().equals(end)) return rte;//possible.add(rte);
                     else{
                         if(!explored.contains(node.getCity())){
                             explored.add(node.getCity());
@@ -163,11 +210,12 @@ public class RouteFinder {
                         else optimizeRoutes(frontier, rte);
                     }
                 }
-            }
-            frontier.remove();
+            //}
+            if(frontier.peek().outOfNeighbors()) frontier.remove();
+            //frontier.remove();
         }
-        if(possible.size()==0)return null;
-        else return possible.peek();
+        //if(possible.size()==0){System.out.println("yo");return null;}
+        return possible.peek();
     }
     public static void optimizeRoutes(PriorityQueue<Route> r, Route rte){
         Object[] com=r.toArray();
@@ -180,18 +228,19 @@ public class RouteFinder {
     }
 
     public static Route aStarSearch(ArrayList<City> cities, City start, City end){
-        universalstepkounter333=0;
+        stepCounter=0;
         ArrayList<City> explored=new ArrayList<>();
         PriorityQueue<Route> frontier=new PriorityQueue<>();
         frontier.add(new Route(start, end));
         explored.add(start);
         PriorityQueue<Route> possible=new PriorityQueue<>();
         while(frontier.size()>0){
-            universalstepkounter333++;
+            stepCounter++;
             for(int p=0;p<frontier.peek().peek().relSize();p++){
-                Neighbor node=frontier.peek().nextStep();
+                Neighbor node=frontier.peek().nextStep();///////////////
                 if(!frontier.peek().contains(node.getCity())){
                     Route rte=new Route(frontier.peek(),node,end);
+                    //visualizer(rte);
                     if(node.getCity().equals(end)) possible.add(rte);
                     else{
                         if(!explored.contains(node.getCity())){
@@ -205,8 +254,9 @@ public class RouteFinder {
             frontier.remove();
         }
         if(possible.size()==0)return null;
-        else return possible.peek();
+        return possible.peek();
     }
+    
 }
 
 

@@ -1,4 +1,4 @@
-public class Neighbor{
+public class Neighbor implements Comparable<Neighbor>{
     private City city;
     private int distance;
     public Neighbor(City city, int distance){
@@ -13,5 +13,8 @@ public class Neighbor{
     }
     public String toString(){
         return city.getName()+" is "+distance+" away";
+    }
+    public int compareTo(Neighbor o) {
+        return distance=o.distance;
     }
 }

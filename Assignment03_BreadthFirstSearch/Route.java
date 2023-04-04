@@ -1,15 +1,27 @@
 import java.util.Stack;
+import java.util.PriorityQueue;
 public class Route extends Stack<City> implements Comparable<Route>{
     private int distance=0;
     int ind=-1;
     City goal;
-    private int[] order;//=new int[peek().relSize()];
+    private int[] order;
+    PriorityQueue<Neighbor> next=new PriorityQueue<>();
     public Route(Route r){
         distance=r.distance();
         for(City c: r){
             add(c);
         }
+        for(int i=0;i<peek().relSize();i++){
+            next.add(peek().getRelated(i));
+        }
         fillOrder();
+    }
+    public Neighbor getNextN(){
+        if(outOfNeighbors()) return null;
+        return next.remove();
+    }
+    public boolean outOfNeighbors(){
+        return next.size()==0;
     }
     public Route(Route r, Neighbor rel){
         distance=r.distance();
@@ -18,10 +30,16 @@ public class Route extends Stack<City> implements Comparable<Route>{
         }
         distance+=rel.getDistance();
         add(rel.getCity());
+        for(int i=0;i<peek().relSize();i++){
+            next.add(peek().getRelated(i));
+        }
         fillOrder();
     }
     public Route(City r){
         add(r);
+        for(int i=0;i<peek().relSize();i++){
+            next.add(peek().getRelated(i));
+        }
         fillOrder();
     }
     /**
@@ -89,6 +107,15 @@ public class Route extends Stack<City> implements Comparable<Route>{
         }
     }
     public int compareTo(Route o) {
-        return distance()-((Route)o).distance();
+        return distance()-o.distance();
+    }
+    public String toString(){
+        String rtn=distance+": [";
+        Object[] c=this.toArray();
+        for(int i=0;i<c.length;i++){
+            rtn+=((City)c[i]).getName();
+            if(i<c.length-1)rtn+=", ";
+        }
+        return rtn+"]";
     }
 }

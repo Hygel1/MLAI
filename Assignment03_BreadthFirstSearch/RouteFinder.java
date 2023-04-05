@@ -6,18 +6,58 @@ public class RouteFinder {
     static int stepCounter=0;
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
-        System.out.println(1);
-        displayMap(data);
+        //System.out.println(1);
+        //displayMap(data);
+        drawMaze("Assignment03_BreadthFirstSearch\\dataFiles\\maze07-large.txt");
+        ArrayList<City> mazeData=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze07-large.txt");
         //ArrayList<City> rte=findPathBreadthFirst(data, data.get(0),data.get(13));
         Route rte=uniformCost(data, data.get(2), data.get(12));
         Route rte2=aStarSearch(data, data.get(10), data.get(5));
-        System.out.println("2");
+        Route rte3=uniformCost(mazeData, mazeData.get(0), mazeData.get(mazeData.size()-1));
+        //mazeVisualizer(rte3);
+        //System.out.println(mazeData);
+        System.out.println(rte3+"\n"+stepCounter);
+        
+        /*System.out.println("2");
         System.out.println(rte);
         System.out.println(stepCounter);
         System.out.println(rte2);
-        System.out.println(stepCounter);
+        System.out.println(stepCounter); */
+        System.out.println(rte3);
     }
-    public static void visualizer(Route r){
+    public static void drawMaze(String path){
+        int h=1000,w=2000;
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setCanvasSize(w,h);
+        StdDraw.setXscale(0,w);
+        StdDraw.setYscale(0,h);
+        StdDraw.setPenRadius(.005);
+        try{
+            File f=new File(path);
+            Scanner s=new Scanner(f);
+            StdDraw.setPenColor(StdDraw.BLACK);
+            s.nextLine();s.nextLine();
+            for(int i=0;s.hasNextLine();i++){ //this is just not how thats supposed to work but ig it works
+                String[] hold=s.nextLine().split(" ");
+                StdDraw.text(50,h-i*10-10,i+"");
+                for(int n=0;n<hold.length;n++){
+                    if(hold[n].equals("0")) StdDraw.circle(n*10+100, h-i*10-10, 5);
+                }
+            }
+            StdDraw.show();
+            s.close();
+        }catch(Exception e){}
+    }
+    public static void mazeVisualizer(Route r){
+        Object[] a=r.toArray();
+        StdDraw.setPenColor(StdDraw.RED);
+        for(Object o:a){
+            StdDraw.circle(((City)o).getp1()*10+100,1000-((City)o).getp2()*10-10,5);
+            StdDraw.show(500);
+        }
+        
+    }
+    public static void mapVisualizer(Route r){
         Route rte=new Route(r);
         StdDraw.setPenColor(StdDraw.BLACK);
         while(rte.size()>1){
@@ -28,37 +68,6 @@ public class RouteFinder {
             StdDraw.line(rte.peek().getp1(),rte.pop().getp2(),rte.peek().getp1(),rte.peek().getp2());
         }
         StdDraw.show(500);
-    }
-    /**
-     * traces route defined in c
-     * @param c
-     */
-    public static void displayRoute(ArrayList<City> c){
-        StdDraw.setPenRadius(.01);
-        StdDraw.setPenColor(StdDraw.BLACK);
-        for(int i=0;i<c.size()-1;i++){
-            StdDraw.line(c.get(i).getp1(),c.get(i).getp2(),c.get(i+1).getp1(),c.get(i+1).getp2());
-        }
-        StdDraw.show();
-        StdDraw.setPenRadius(.005);
-    }
-    /**
-     * draws line between adjacent points in c
-     * should add 1 second intervals between lines but doesn't work 
-     * @param c route to be traced
-     */
-    public static void displayRouteSequence(ArrayList<City> c){
-        StdDraw.setPenRadius(.01);
-        StdDraw.setPenColor(StdDraw.BLACK);
-        Object o=new Object();
-        for(int i=0;i<c.size()-1;i++){
-           try{
-            o.wait(1000);
-           }catch(Exception e){}
-            StdDraw.line(c.get(i).getp1(),c.get(i).getp2(),c.get(i+1).getp1(),c.get(i+1).getp2());
-            StdDraw.show();
-        }
-        StdDraw.setPenRadius(.005);
     }
     /**
      * takes ArrayList of City classes and displays map according to data
@@ -121,29 +130,40 @@ public class RouteFinder {
         }catch(Exception e){e.printStackTrace();}
         return rtn;
     }
-    public ArrayList<City> readMazeData(String path){
+    private static int[] mazeDimensions=new int[2];
+    /**
+     * reads text file in maze standard and returns list of "cities" as arraylist
+     * @param path
+     * @return
+     */
+    public static ArrayList<City> readMazeData(String path){
         ArrayList<City> rtn=new ArrayList<City>();
         try{
             File f=new File(path);
             Scanner s=new Scanner(f);
-            if(!s.nextLine().equals("maze")) throw new Exception("FileTypeException");
+            //if(!s.nextLine().equals("maze")) throw new Exception("FileTypeException");
+            //s.nextLine();
             String[] holdVal;
+            s.nextLine();
             String[] bounds=s.nextLine().split(" ");
+            mazeDimensions[0]=Integer.parseInt(bounds[0]);
+            mazeDimensions[1]=Integer.parseInt(bounds[1]);
             int num=0;
             while(s.hasNextLine()){
                 holdVal=s.nextLine().split(" ");
                 for(int i=0;i<holdVal.length;i++){
-                    if(holdVal[i].equals("1")) rtn.add(new City(num+", "+i,num,i));
+                    if(holdVal[i].equals("1")) rtn.add(new City(i+","+num,i,num));
                 }
+                num++;
             }
+            s.close();
             //declare bounds (probably unnecessary tbh)
-            int[] bnds=new int[]{Integer.parseInt(bounds[0]),Integer.parseInt(bounds[1])};
             //loop through declared "cities" and find out if there's a neighboring city (only 4 possible neighbors, vert/horizontal)
             for(int i=0;i<rtn.size();i++){
                 int pnt[]=new int[]{rtn.get(i).getp1(),rtn.get(i).getp2()};
                 for(int n=0;n<rtn.size();n++){
                     if(rtn.get(n).getp1()==pnt[0]+1&&rtn.get(n).getp2()==pnt[1]||rtn.get(n).getp1()==pnt[0]-1&&rtn.get(n).getp2()==pnt[1]||rtn.get(n).getp1()==pnt[0]&&rtn.get(n).getp2()==pnt[1]+1||rtn.get(n).getp1()==pnt[0]&&rtn.get(n).getp2()==pnt[1]-1){
-                        rtn.get(i).addRelated(new Neighbor(rtn.get(i), 1));
+                        rtn.get(i).addRelated(new Neighbor(rtn.get(n), 1));
                     }
                 }
             }

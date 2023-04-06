@@ -8,7 +8,7 @@ public class RouteFinder {
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
         //System.out.println(1);
         //displayMap(data);
-        drawMaze("Assignment03_BreadthFirstSearch\\dataFiles\\maze07-large.txt");
+        drawMaze("Assignment03_BreadthFirstSearch\\dataFiles\\maze08-large.txt");
         ArrayList<City> mazeData=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze07-large.txt");
         //ArrayList<City> rte=findPathBreadthFirst(data, data.get(0),data.get(13));
         Route rte=uniformCost(data, data.get(2), data.get(12));
@@ -23,7 +23,6 @@ public class RouteFinder {
         System.out.println(stepCounter);
         System.out.println(rte2);
         System.out.println(stepCounter); */
-        System.out.println(rte3);
     }
     public static void drawMaze(String path){
         int h=1000,w=2000;
@@ -39,9 +38,8 @@ public class RouteFinder {
             s.nextLine();s.nextLine();
             for(int i=0;s.hasNextLine();i++){ //this is just not how thats supposed to work but ig it works
                 String[] hold=s.nextLine().split(" ");
-                StdDraw.text(50,h-i*10-10,i+"");
                 for(int n=0;n<hold.length;n++){
-                    if(hold[n].equals("0")) StdDraw.circle(n*10+100, h-i*10-10, 5);
+                    if(hold[n].equals("0")) StdDraw.circle(n*10+100, h-i*10-60, 5);
                 }
             }
             StdDraw.show();
@@ -52,8 +50,8 @@ public class RouteFinder {
         Object[] a=r.toArray();
         StdDraw.setPenColor(StdDraw.RED);
         for(Object o:a){
-            StdDraw.circle(((City)o).getp1()*10+100,1000-((City)o).getp2()*10-10,5);
-            StdDraw.show(500);
+            StdDraw.circle(((City)o).getp1()*10+100,1000-((City)o).getp2()*10-60,5);
+            StdDraw.show(100);
         }
         
     }
@@ -144,7 +142,7 @@ public class RouteFinder {
             //if(!s.nextLine().equals("maze")) throw new Exception("FileTypeException");
             //s.nextLine();
             String[] holdVal;
-            s.nextLine();
+            String type=s.nextLine();
             String[] bounds=s.nextLine().split(" ");
             mazeDimensions[0]=Integer.parseInt(bounds[0]);
             mazeDimensions[1]=Integer.parseInt(bounds[1]);
@@ -171,8 +169,25 @@ public class RouteFinder {
         }
         catch(Exception e){e.printStackTrace();};
         return rtn;
-
     }
+    /*
+    public ArrayList<City> readTerrain(String path){
+        try{
+            File f=new File(path);
+            Scanner s=new Scanner(f);
+            Object[][] hold;
+            s.nextLine();
+            String[] holdDim=s.nextLine().split(" ");
+            hold=new Object[Integer.parseInt(holdDim[0])][Integer.parseInt(holdDim[1])];
+            for(int i=0;s.hasNext();i++){ //set 2D array
+                hold[i]=s.nextLine().split(" ");
+                for(int n=0;n<hold[i].length;n++) hold[i][n]=new City((String)hold[i][n],i,n);
+            }
+            for(int i=0;i<hold.length;i++){
+                for(int n=0;n<hold[i].length;n++)
+            }
+        }catch(Exception e){};
+    }*/
     /**
      * takes an ArrayList of cites, one start city, and one end city; finds the shortest path by node count
      * @param cities cities to choose from
@@ -211,7 +226,6 @@ public class RouteFinder {
         PriorityQueue<Route> possible=new PriorityQueue<>();
         while(frontier.size()>0){
            stepCounter++;
-           //for(int p=0;p<frontier.peek().peek().relSize();p++){ 
                 Neighbor node=frontier.peek().getNextN();
                 while(node==null){
                     try{throw new ArrayIndexOutOfBoundsException();} catch(Exception e){}
@@ -230,11 +244,8 @@ public class RouteFinder {
                         else optimizeRoutes(frontier, rte);
                     }
                 }
-            //}
             if(frontier.peek().outOfNeighbors()) frontier.remove();
-            //frontier.remove();
         }
-        //if(possible.size()==0){System.out.println("yo");return null;}
         return possible.peek();
     }
     public static void optimizeRoutes(PriorityQueue<Route> r, Route rte){

@@ -41,7 +41,7 @@ public class DataReader {
                                 w=a;break;
                             }
                         }
-                        rtn.get(r).addRelated(new related(rtn.get(w), Integer.valueOf(h[i+1])));
+                        rtn.get(r).addRelated(new Neighbor(rtn.get(w), Integer.valueOf(h[i+1])));
                     }
                 }catch(Exception e){e.printStackTrace();}
             }

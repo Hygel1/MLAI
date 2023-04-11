@@ -1,20 +1,19 @@
 public class Neighbor implements Comparable<Neighbor>{
-    private City city;
-    private int distance;
-    public Neighbor(City city, int distance){
-        this.city=city;
+    private Point pnt;
+    private Double distance;
+    public Neighbor(Point pnt, double distance){
+        this.pnt=pnt;
         this.distance=distance;
     }
-    public int getDistance(){
+    public double getDistance(){
         return distance;
     }
-    public City getCity(){
-        return city;
-    }
-    public String toString(){
-        return city.getName()+" is "+distance+" away";
+    public Point getPoint(){
+        return pnt;
     }
     public int compareTo(Neighbor o) {
-        return distance=o.distance;
+        double d=distance-o.distance;
+        if(d>0) return 1; //if greater than 0 return positive number
+        return d<0?-1:0; //if less than 0 return -1, otherwise return 0
     }
 }

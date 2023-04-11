@@ -1,14 +1,14 @@
 import java.util.Stack;
 import java.util.PriorityQueue;
-public class Route extends Stack<City> implements Comparable<Route>{
+public class Route extends Stack<Point> implements Comparable<Route>{
     private int distance=0;
     int ind=-1;
-    City goal;
+    Point goal;
     private int[] order;
     PriorityQueue<Neighbor> next=new PriorityQueue<>();
     public Route(Route r){
         distance=r.distance();
-        for(City c: r){
+        for(Point c: r){
             add(c);
         }
         for(int i=0;i<peek().relSize();i++){
@@ -25,17 +25,17 @@ public class Route extends Stack<City> implements Comparable<Route>{
     }
     public Route(Route r, Neighbor rel){
         distance=r.distance();
-        for(City c: r){
+        for(Point c: r){
             add(c);
         }
         distance+=rel.getDistance();
-        add(rel.getCity());
+        add(rel.getPoint());
         for(int i=0;i<peek().relSize();i++){
             next.add(peek().getRelated(i));
         }
         fillOrder();
     }
-    public Route(City r){
+    public Route(Point r){
         add(r);
         for(int i=0;i<peek().relSize();i++){
             next.add(peek().getRelated(i));
@@ -47,7 +47,7 @@ public class Route extends Stack<City> implements Comparable<Route>{
      * @param r
      * @param goal
      */
-    public Route(City r, City goal){
+    public Route(Point r, Point goal){
         add(r);
         this.goal=goal;
         fillOrderAStar();
@@ -58,13 +58,13 @@ public class Route extends Stack<City> implements Comparable<Route>{
      * @param rel
      * @param goal
      */
-    public Route(Route r, Neighbor rel, City goal){
+    public Route(Route r, Neighbor rel, Point goal){
         distance=r.distance();
-        for(City c: r){
+        for(Point c: r){
             add(c);
         }
         distance+=rel.getDistance();
-        add(rel.getCity());
+        add(rel.getPoint());
         this.goal=goal;
         fillOrderAStar();
     }

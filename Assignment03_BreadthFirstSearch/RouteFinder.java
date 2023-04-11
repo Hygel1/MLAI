@@ -14,6 +14,7 @@ public class RouteFinder {
         Route rte=uniformCost(data, data.get(2), data.get(12));
         Route rte2=aStarSearch(data, data.get(10), data.get(5));
         Route rte3=uniformCost(mazeData, mazeData.get(0), mazeData.get(mazeData.size()-1));
+        mazeVisualizer(rte3);
         //mazeVisualizer(rte3);
         //System.out.println(mazeData);
         System.out.println(rte3+"\n"+stepCounter);
@@ -90,7 +91,31 @@ public class RouteFinder {
             }
         }
         StdDraw.show();
-    }
+    } 
+    public static ArrayList<HeightPoint> readTerrainMapData(String path){
+        ArrayList<ArrayList<HeightPoint>> rtn2D=new ArrayList<>();
+        try{
+            File f=new File(path);
+            Scanner s=new Scanner(f);
+            for(int i=0;s.hasNextLine();i++){
+                rtn2D.add(new ArrayList<>());
+                String[] hold=s.nextLine().split(" ");
+                for(int n=0;n<hold.length;n++){
+                    rtn2D.get(i).add(new HeightPoint(n, i, Integer.valueOf(hold[n])));
+                }
+            }
+        }catch(Exception e){e.printStackTrace();}
+        ArrayList<HeightPoint> rtn=new ArrayList<>(rtn2D.size()*rtn2D.get(0).size());
+        for(int i=0;i<rtn2D.size();i++){
+            for(int n=0;n<rtn2D.get(i).size();n++){
+                rtn.add(rtn2D.get(i).get(n));
+                if(i-1>-1&&n>-1&&i<rtn2D.size()&&n<rtn2D.get(i).size()) rtn.get(rtn.size()-1).addRelated(new Neighbor(rtn2D.get(i-1).get(n), Math.abs(rtn2D.get(i-1).get(n).getHeight()-rtn2D.get(i).get(n).getHeight())));
+                if(i+1>-1&&n>-1&&i<rtn2D.size()&&n<rtn2D.get(i).size()) rtn.get(rtn.size()-1).addRelated(new Neighbor(rtn2D.get(i+1).get(n), Math.abs(rtn2D.get(i+1).get(n).getHeight()-rtn2D.get(i).get(n).getHeight())));
+                if(i>-1&&n-1>-1&&i<rtn2D.size()&&n<rtn2D.get(i).size()) rtn.get(rtn.size()-1).addRelated(new Neighbor(rtn2D.get(i).get(n-1), Math.abs(rtn2D.get(i).get(n-1).getHeight()-rtn2D.get(i).get(n).getHeight())));
+                if(i>-1&&n+1>-1&&i<rtn2D.size()&&n<rtn2D.get(i).size()) rtn.get(rtn.size()-1).addRelated(new Neighbor(rtn2D.get(i).get(n+1), Math.abs(rtn2D.get(i).get(n+1).getHeight()-rtn2D.get(i).get(n).getHeight())));
+            }
+        }
+    } 
     /**
      * reads map data from txt using scanner and exports as ArrayList of City classes
      * @param path
@@ -170,24 +195,6 @@ public class RouteFinder {
         catch(Exception e){e.printStackTrace();};
         return rtn;
     }
-    /*
-    public ArrayList<City> readTerrain(String path){
-        try{
-            File f=new File(path);
-            Scanner s=new Scanner(f);
-            Object[][] hold;
-            s.nextLine();
-            String[] holdDim=s.nextLine().split(" ");
-            hold=new Object[Integer.parseInt(holdDim[0])][Integer.parseInt(holdDim[1])];
-            for(int i=0;s.hasNext();i++){ //set 2D array
-                hold[i]=s.nextLine().split(" ");
-                for(int n=0;n<hold[i].length;n++) hold[i][n]=new City((String)hold[i][n],i,n);
-            }
-            for(int i=0;i<hold.length;i++){
-                for(int n=0;n<hold[i].length;n++)
-            }
-        }catch(Exception e){};
-    }*/
     /**
      * takes an ArrayList of cites, one start city, and one end city; finds the shortest path by node count
      * @param cities cities to choose from
@@ -195,13 +202,13 @@ public class RouteFinder {
      * @param end city to end at
      * @return shortest path (by node count) from start to end
      */
-    public static ArrayList<City> findPathBreadthFirst(ArrayList<City> cities, City start, City end){
-        if(start.equals(end)) return new ArrayList<City>();
-        ArrayList<City> visited=new ArrayList<>();
+    public static ArrayList<Point> findPathBreadthFirst(ArrayList<Point> cities, City start, City end){
+        if(start.equals(end)) return new ArrayList<Point>();
+        ArrayList<Point> visited=new ArrayList<>();
         visited.add(start);
-        ArrayList<ArrayList<City>> frontier=new ArrayList<>();
+        ArrayList<ArrayList<Point>> frontier=new ArrayList<>();
         for(int i=0;i<start.relSize();i++){
-            ArrayList<City> hold=new ArrayList<>();hold.add(start);hold.add(start.getRel(i));
+            ArrayList<Point> hold=new ArrayList<>();hold.add(start);hold.add(start.getRel(i));
             frontier.add(hold);
         }
         if(frontier.size()==0) return null;//if frontier starts empty, start city has no related cities, return null (failed)
@@ -217,9 +224,9 @@ public class RouteFinder {
         }
         return null; //if final destination wasn't found, return null (failed)
     }
-    public static Route uniformCost(ArrayList<City> cities, City start, City end){
+    public static Route uniformCost(ArrayList<? extends Point> cities, Point start, Point end){
         stepCounter=0;
-        ArrayList<City> explored=new ArrayList<>();
+        ArrayList<Point> explored=new ArrayList<>();
         PriorityQueue<Route> frontier=new PriorityQueue<>();
         frontier.add(new Route(start));
         explored.add(start);
@@ -233,12 +240,12 @@ public class RouteFinder {
                     if(frontier.isEmpty()) break;
                     node=frontier.peek().getNextN();
                 }
-                if(!frontier.peek().contains(node.getCity())){
+                if(!frontier.peek().contains(node.getPoint())){
                     Route rte=new Route(frontier.peek(),node);
-                    if(node.getCity().equals(end)) return rte;//possible.add(rte);
+                    if(node.getPoint().equals(end)) return rte;//possible.add(rte);
                     else{
-                        if(!explored.contains(node.getCity())){
-                            explored.add(node.getCity());
+                        if(!explored.contains(node.getPoint())){
+                            explored.add(node.getPoint());
                             frontier.add(rte);
                         }
                         else optimizeRoutes(frontier, rte);
@@ -258,9 +265,9 @@ public class RouteFinder {
         r.add(rte);
     }
 
-    public static Route aStarSearch(ArrayList<City> cities, City start, City end){
+    public static Route aStarSearch(ArrayList<? extends Point> cities, Point start, Point end){
         stepCounter=0;
-        ArrayList<City> explored=new ArrayList<>();
+        ArrayList<Point> explored=new ArrayList<>();
         PriorityQueue<Route> frontier=new PriorityQueue<>();
         frontier.add(new Route(start, end));
         explored.add(start);
@@ -269,13 +276,13 @@ public class RouteFinder {
             stepCounter++;
             for(int p=0;p<frontier.peek().peek().relSize();p++){
                 Neighbor node=frontier.peek().nextStep();///////////////
-                if(!frontier.peek().contains(node.getCity())){
+                if(!frontier.peek().contains(node.getPoint())){
                     Route rte=new Route(frontier.peek(),node,end);
                     //visualizer(rte);
-                    if(node.getCity().equals(end)) possible.add(rte);
+                    if(node.getPoint().equals(end)) possible.add(rte);
                     else{
-                        if(!explored.contains(node.getCity())){
-                            explored.add(node.getCity());
+                        if(!explored.contains(node.getPoint())){
+                            explored.add(node.getPoint());
                             frontier.add(rte);
                         }
                         else optimizeRoutes(frontier, rte);

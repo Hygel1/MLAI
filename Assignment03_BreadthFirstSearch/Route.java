@@ -1,11 +1,17 @@
 import java.util.Stack;
 import java.util.PriorityQueue;
+import java.util.ArrayList;
 public class Route extends Stack<Point> implements Comparable<Route>{
     private int distance=0;
     int ind=-1;
     Point goal;
     private int[] order;
     PriorityQueue<Neighbor> next=new PriorityQueue<>();
+    public Route(ArrayList<Point> arr){
+        for(Point a:arr){
+            add(a);
+        }
+    }
     public Route(Route r){
         distance=r.distance();
         for(Point c: r){

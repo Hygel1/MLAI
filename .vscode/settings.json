@@ -7,6 +7,7 @@
         "lib",
         "Assignment02_DataAnalysis",
         "Assignment00_LibraryTest",
-        "Assignment03_BreadthFirstSearch"
+        "Assignment03_BreadthFirstSearch",
+        "Assignment04_DecisionTreeProject"
     ]
 }

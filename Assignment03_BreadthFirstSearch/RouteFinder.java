@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Currency;
 import java.util.PriorityQueue;
 import java.io.File;
 import java.util.Scanner;
@@ -7,15 +8,36 @@ public class RouteFinder {
     static int stepCounter=0;
     public static void main(String[] args){
         ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
-        ArrayList<City> mazeData=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze04-small.txt");
-        Route rteB=findPathBreadthFirst(data, data.get(0),data.get(13));
-        Route rte=uniformCost(data, data.get(0), data.get(13));
-        Route rte2=aStarSearch(data, data.get(10), data.get(5));
-        Route rte3=uniformCost(data, data.get(0), data.get(data.size()-1));
-        Route maze=uniformCost(mazeData, mazeData.get(0), mazeData.get(mazeData.size()-1));
-        //drawMaze("Assignment03_BreadthFirstSearch\\dataFiles\\maze04-small.txt");
-        //mazeVisualizer(maze);
+        //MAZE DATA TESTING!!!
+        /*ArrayList<City> mazeData=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze03-small.txt");
+        ArrayList<City> mazeData1=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze04-small.txt");
+        ArrayList<City> mazeData2=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze05-medium.txt");
+        ArrayList<City> mazeData3=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze06-medium.txt");
+        ArrayList<City> mazeData4=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze07-large.txt");
+        ArrayList<City> mazeData5=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze08-large.txt");
+        Route rteB=findPathBreadthFirst(mazeData, mazeData.get(0),mazeData.get(mazeData.size()-1));
+        Route rte=uniformCost(mazeData, mazeData.get(0), mazeData.get(mazeData.size()-1));
+        Route rte2=aStarSearch(mazeData, mazeData.get(0), mazeData.get(mazeData.size()-1));
         
+        Route rteB1=findPathBreadthFirst(mazeData1, mazeData1.get(0),mazeData1.get(mazeData1.size()-1));
+        Route rte1=uniformCost(mazeData1, mazeData1.get(0), mazeData1.get(mazeData1.size()-1));
+        Route rte21=aStarSearch(mazeData1, mazeData1.get(0), mazeData1.get(mazeData1.size()-1));
+        
+        Route rteB2=findPathBreadthFirst(mazeData2, mazeData2.get(0),mazeData2.get(mazeData2.size()-1));
+        Route rte112=uniformCost(mazeData2, mazeData2.get(0), mazeData2.get(mazeData2.size()-1));
+        Route rte22=aStarSearch(mazeData2, mazeData2.get(0), mazeData2.get(mazeData2.size()-1));
+
+        Route rteB3=findPathBreadthFirst(mazeData3, mazeData3.get(0),mazeData3.get(mazeData3.size()-1));
+        Route rte3=uniformCost(mazeData3, mazeData3.get(0), mazeData3.get(mazeData3.size()-1));
+        Route rte23=aStarSearch(mazeData3, mazeData3.get(0), mazeData3.get(mazeData3.size()-1));
+
+        Route rteB4=findPathBreadthFirst(mazeData4, mazeData4.get(0),mazeData4.get(mazeData4.size()-1));
+        Route rte4=uniformCost(mazeData4, mazeData4.get(0), mazeData4.get(mazeData4.size()-1));
+        Route rte24=aStarSearch(mazeData4, mazeData4.get(0), mazeData4.get(mazeData4.size()-1));
+
+        Route rteB5=findPathBreadthFirst(mazeData5, mazeData5.get(0),mazeData5.get(mazeData5.size()-1));
+        Route rte5=uniformCost(mazeData5, mazeData5.get(0), mazeData5.get(mazeData5.size()-1));
+        Route rte25=aStarSearch(mazeData5, mazeData5.get(0), mazeData5.get(mazeData5.size()-1));*/ 
     }
     public static void drawMaze(String path){
         int h=1000,w=2000;
@@ -191,6 +213,7 @@ public class RouteFinder {
      * @return shortest path (by node count) from start to end
      */
     public static Route findPathBreadthFirst(ArrayList<? extends Point> cities, Point start, Point end){
+        long time=System.currentTimeMillis();
         int stepCounter=0;
         if(start.equals(end)) return null;
         ArrayList<Point> visited=new ArrayList<>();
@@ -207,7 +230,7 @@ public class RouteFinder {
                 if(!visited.contains(frontier.get(0).get(frontier.get(0).size()-1).getRel(i))){ //if the city hasn't been visited yet...       
                     visited.add(frontier.get(0).get(frontier.get(0).size()-1).getRel(i)); //add the current city to the list of visited cities
                     frontier.add(new ArrayList<>(frontier.get(0)));frontier.get(frontier.size()-1).add(frontier.get(0).get(frontier.get(0).size()-1).getRel(i)); //append frontier with a new direction including the unvisited rel city                   
-                    if(frontier.get(frontier.size()-1).get(frontier.get(frontier.size()-1).size()-1).equals(end)) {System.out.println("BF:"+stepCounter);return new Route(frontier.get(frontier.size()-1));} //if the last checked city is the final destination, return the last made direction set
+                    if(frontier.get(frontier.size()-1).get(frontier.get(frontier.size()-1).size()-1).equals(end)) {System.out.println("BF:"+stepCounter+", "+((double)(System.currentTimeMillis()-time)));return new Route(frontier.get(frontier.size()-1));} //if the last checked city is the final destination, return the last made direction set
                 }
             }
             frontier.remove(0);
@@ -215,6 +238,7 @@ public class RouteFinder {
         return null; //if final destination wasn't found, return null (failed)
     }
     public static Route uniformCost(ArrayList<? extends Point> cities, Point start, Point end){
+        long time=System.currentTimeMillis();
         stepCounter=0;
         ArrayList<Point> explored=new ArrayList<>();
         PriorityQueue<Route> frontier=new PriorityQueue<>();
@@ -243,7 +267,7 @@ public class RouteFinder {
                 }
             if(frontier.peek().outOfNeighbors()) frontier.remove();
         }
-        System.out.println("UC: "+stepCounter);
+        System.out.println("UC: "+stepCounter+", "+(System.currentTimeMillis()-time)/1000.0);
         return possible.peek();
     }
     public static void optimizeRoutes(PriorityQueue<Route> r, Route rte){

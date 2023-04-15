@@ -15,6 +15,9 @@ import weka.core.Instances;
 import weka.gui.treevisualizer.PlaceNode2;
 import weka.gui.treevisualizer.TreeVisualizer;
 import java.awt.BorderLayout;
+import java.io.File;
+import java.util.Scanner;
+
 import javax.swing.JFrame;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.Instances;
@@ -64,6 +67,7 @@ public class TreeTest_J48 {
 			System.out.println(out);
 		}
 		catch (Exception e) {
+			System.out.println(":(1");
 			e.printStackTrace();
 		}
 	}
@@ -90,14 +94,38 @@ public class TreeTest_J48 {
 		TreeTest_J48 decisionTree = new TreeTest_J48();
 		
 		// Define Paths for Training and Testing Data
-		//
-		//
-		String trainingPath = "Assignment04_DecisionTreeProject/diabetes_data/diabetes_data_train.csv";
-		String testingPath = "Assignment04_DecisionTreeProject/diabetes_data/diabetes_data_test.csv";
-		int classIndex = 4;
+		String trainingPathIris = "Assignment04_DecisionTreeProject/iris_data/iris_train.csv";
+		String testingPathIris = "Assignment04_DecisionTreeProject/iris_data/iris_test.csv";
+		
+
+		//Define Paths for Training and Testing Data for Diabetes
+		String trainingPathDiabetes = "Assignment04_DecisionTreeProject/diabetes_data/diabetes_data_train.csv";
+		String testingPathDiabetes = "Assignment04_DecisionTreeProject/diabetes_data/diabetes_data_test.csv";
+		int classIndexDiabetes = 16;
+
+		//Define path for Training and Testing Data for Income
+		String trainingPathIncome="Assignment04_DecisionTreeProject/income_data/income_data_test.csv";
+		String testingPathIncome="Assignment04_DecisionTreeProject/income_data/income_data_train.csv";
+		int classIndexIncome=14;
+
+		//Define path for Training and Testing Data for Horse Race Placement
+		String trainingPathHorse="Assignment04_DecisionTreeProject/horse_data/horse_data_train.csv";
+		String testingPathHorse="Assignment04_DecisionTreeProject/horse_data/horse_data_test.csv";
+		int classIndexHorse=2;
+		
+		//Define path for Training and Testing Data for Horse Race Placement
+		String trainingPathCredit="Assignment04_DecisionTreeProject/credit_data/credit_train.csv";
+		String testingPathCredit="Assignment04_DecisionTreeProject/credit_data/credit_test.csv";
+		int classIndexCredit=15;
+
+		//Define used datasets
+		String trainingPath=trainingPathHorse;
+		String testingPath=testingPathHorse;
+		int classIndex=classIndexHorse;
 		
 		// Run Tree Build and Test
-		//decisionTree.testTreeJ48(trainingPath, testingPath, classIndex);
+		decisionTree.testTreeJ48(trainingPath, testingPath, classIndex);
+
 
 		//Get Instances for Data
 		Instances data=decisionTree.getData(testingPath, classIndex);
@@ -115,8 +143,6 @@ public class TreeTest_J48 {
 		catch(Exception e){
 			e.printStackTrace();
 		}
-
-
 	}
 	public Instances getData(String dataPath, int classIndex){
 		Instances data=null;

@@ -96,6 +96,7 @@ public class TreeTest_J48 {
 		// Define Paths for Training and Testing Data
 		String trainingPathIris = "Assignment04_DecisionTreeProject/iris_data/iris_train.csv";
 		String testingPathIris = "Assignment04_DecisionTreeProject/iris_data/iris_test.csv";
+		int classIndexIris=4;
 		
 
 		//Define Paths for Training and Testing Data for Diabetes
@@ -119,9 +120,9 @@ public class TreeTest_J48 {
 		int classIndexCredit=15;
 
 		//Define used datasets
-		String trainingPath=trainingPathHorse;
-		String testingPath=testingPathHorse;
-		int classIndex=classIndexHorse;
+		String trainingPath=trainingPathIncome;
+		String testingPath=testingPathIncome;
+		int classIndex=classIndexIncome;
 		
 		// Run Tree Build and Test
 		decisionTree.testTreeJ48(trainingPath, testingPath, classIndex);
@@ -132,7 +133,7 @@ public class TreeTest_J48 {
 
 		//Get J48 Tree
 		J48 treeClassifier=decisionTree.getJ48Tree(trainingPath, classIndex);
-
+		showTree(treeClassifier);
 		//Test Classification for one instance
 		// Instance 0
 		Instance sample=data.instance(6);
@@ -144,6 +145,29 @@ public class TreeTest_J48 {
 			e.printStackTrace();
 		}
 	}
+	public static void showTree(J48 cls){
+		try{
+			String graphicDescriptor=cls.graph();
+			//System.out.println(graphicDescriptor);
+			final javax.swing.JFrame jF=new javax.swing.JFrame("Weka Tree Visualizer: J48");
+
+			jF.setSize(10000,1000);
+			jF.getContentPane().setLayout(new BorderLayout());
+
+			TreeVisualizer tv=new TreeVisualizer(null, graphicDescriptor, new PlaceNode2());
+			jF.getContentPane().add(tv,BorderLayout.CENTER);
+
+			jF.addWindowListener(new java.awt.event.WindowAdapter(){
+				public void windowClosing(java.awt.event.WindowEvent e){
+					jF.dispose();
+				}
+			});
+			jF.setVisible(true);
+			tv.fitToScreen();
+			}
+			catch(Exception e){e.printStackTrace();}
+	}
+	
 	public Instances getData(String dataPath, int classIndex){
 		Instances data=null;
 		try{

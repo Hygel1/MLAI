@@ -8,7 +8,8 @@ public class Record {
         classification=c;
     }
     public Record(ArrayList<String> a, String c){
-
+        classification=c;
+        attributes=new Attributes(a);
     }
     public Attributes getAttributes(){
         return attributes;
@@ -25,5 +26,7 @@ public class Record {
     public void removeAttrbuteByName(String name){
         attributes.remove(name);
     }
-    //public String toString(){}
+    public String toString(){
+        return attributes+" Class: "+classification;
+    }
 }

@@ -25,6 +25,13 @@ public class Attributes{
     public String getField(int i){
         return fields.get(i);
     }
+    public String getValueAt(int index){
+        return fields.get(index);
+    }
+    public String getValueAt(String s){
+        if(fields.indexOf(s)==-1) return null;
+        return fields.get(fields.indexOf(s));
+    }
     /**
      * print comma separated versoin of all values in fields
      */
@@ -33,8 +40,8 @@ public class Attributes{
         for(String s:fields){
             rtn+=s+", ";
         }
-        if(rtn.length()>2) rtn=rtn.substring(0,rtn.length()-2);
-        return rtn;
+        if(rtn.length()>2) return rtn.substring(0,rtn.length()-2);
+        return rtn; //shouldn't ever be used
     }
     public void remove(int index) {
         fields.remove(index);

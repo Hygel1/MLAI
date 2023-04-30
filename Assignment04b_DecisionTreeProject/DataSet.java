@@ -1,46 +1,139 @@
-import java.util.Scanner;
+/**
+ * This class is provided for you so you can test your Util functions
+ * modify at your own risk!
+ */ 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+/**
+ * 
+ * @author C Michaud / www.nebomusic.net
+ * Models a Dataset with ArrayList of Records
+ *
+ */
+
 public class DataSet {
-    //reads and parses dataset into readable format
-    ArrayList<Record> data;
-    ArrayList<String> attrs;
-    int classIndex;
-    public DataSet(){
-        data=new ArrayList<>();
-        attrs=new ArrayList<>();
-    }
-    public DataSet(String path, int classIndex){
-        this.classIndex=classIndex;
-        data=new ArrayList<>();
-        attrs=new ArrayList<>();
-        try{
-            File f=new File(path);
-            Scanner s=new Scanner(f);
-            for(String string:s.nextLine().split(",")) attrs.add(string.trim());
-            while(s.hasNext()){
-                ArrayList<String> str=new ArrayList<String>();
-                for(String string:s.nextLine().split(",")) str.add(string.trim());
-                data.add(new Record(str,str.get(classIndex)));
-            }
-            s.close();
-        } catch(Exception e){e.printStackTrace();}
-    }
-    public Record getDataAtIndex(int i){
-        return data.get(i);
-    }
-    public void addRecord(Record r){
-        data.add(r);
-    }
-    public DataSet removeAttributesAtIndex(int n){
-        data.remove(n);
-        return this;
-    }
-    public String toString(){
-        String rtn="";
-        for(String s:attrs) rtn+=s+", ";
-        if(rtn.length()>2) rtn=rtn.substring(0,rtn.length()-2)+"\n"; //should always be called, if statement is for protection
-        for(Record d:data) rtn+=d+"\n";
-        return rtn;
-    }
+	
+	private ArrayList<Record> data = new ArrayList<Record>();
+	private ArrayList<String> attrs = new ArrayList<String>();
+	
+	private ArrayList<Integer> selectedAttributeIndexes = new ArrayList<Integer>(); // Note sure if will use
+	
+	public DataSet() {
+		
+	}
+	
+	/**
+	 *  Creates and Returns a DataSet object from a file
+	 * @param path String pointing to csv file
+	 * @param classIndex Index 
+	 */
+	public DataSet(String path, int classIndex) {
+		try {
+			File file = new File(path);
+			Scanner input = new Scanner(file);
+			
+			String [] header = input.nextLine().split(",");
+			
+			for (int i = 0; i < header.length; i++) {
+				if (i != classIndex) {
+					attrs.add(header[i]);
+				}
+			}
+						
+			while (input.hasNext()) {
+				String [] line = input.nextLine().split(",");
+				ArrayList<String> a = new ArrayList<String>();
+				String c = "";
+				for (int i = 0; i < line.length; i++) {
+					if (i == classIndex) {
+						c = line[i];
+					}
+					else a.add(line[i]);
+				}
+				Attributes atts = new Attributes(a);
+				Record r = new Record(atts, c);
+				r.setFieldNames(attrs);
+				data.add(r);
+			}
+			
+			input.close();
+			
+		}
+		
+		catch(Exception e) {
+    		e.printStackTrace();
+    	}
+	}
+	
+	public void addRecord(Record r) {
+		data.add(r);
+	}
+	
+	
+	public DataSet removeAtributeByName(String name) {
+		DataSet output = new DataSet();
+		
+		for (Record r : data) {
+			String c =r.getClassification();
+			ArrayList<String> attr = r.getAttributes().getCopyValues();
+			attr.remove(name);
+			Record nr = new Record(attr, c);
+			output.addRecord(nr);
+		}
+		
+		return output;
+	}
+	
+	public ArrayList<Record> getData() {
+		return data;
+	}
+	
+	public Record getDataAtIndex(int i) {
+		return data.get(i);
+	}
+	
+	public Record getDataAtName(String name) {
+		int index = attrs.indexOf(name);
+		return data.get(index);
+	}
+	
+	public ArrayList<String> getAttributeList() {
+		return attrs;
+	}
+	
+	public String toString() {
+		String output = "";
+		for (String s : attrs) {
+			output += s + ",";
+		}
+		output += "classification," + "\n";
+		
+		for (Record r : data) {
+			output += r.getAttributes().toString();
+			output += r.getClassification() + "\n";
+		}
+		
+		return output;
+	}
+	
+	public int size() {
+		return data.size();
+	}
+	
+	public ArrayList<Integer> getUsedIndexes() {
+		return selectedAttributeIndexes;
+	}
+	
+	public void addUsedIndex(int index) {
+		selectedAttributeIndexes.add(index);
+	}
+	
+	public void setAttributes(ArrayList<String> attributes) {
+		for (String s : attributes) {
+			attrs.add(s);
+		}
+	}
+
 }

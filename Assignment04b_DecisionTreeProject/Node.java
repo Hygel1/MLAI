@@ -18,9 +18,9 @@ public class Node {
         branches.add(n);
         values.add(v);
     }
-    public String classify(Attributes instance){
+    public String classify(Record instance){
         if(branches.size()<1) return output;
-        String value=instance.getValueAt(attribute);
+        String value=instance.getAttributeAt(attribute);
         int branchIndex=values.indexOf(value);
         return branches.get(branchIndex).classify(instance);
     }

@@ -1,55 +1,58 @@
 import java.util.ArrayList;
-public class Attributes{
-    //defines a collection of attributes dedscribing a node
-    ArrayList<String> fields;
-    ArrayList<String> fieldNames;
-    public Attributes(ArrayList<String> input){
-        fields=new ArrayList<>(input);
-    }
-    public Attributes(Attributes a){
-        fields=new ArrayList<String>(a.fields);
-        fieldNames=new ArrayList<String>(a.fieldNames);
-    }
-    public ArrayList<String> getValues(){
-        return fields;
-    }
-    public ArrayList<String> getCopyValues(){
-        return new ArrayList<String>(fields);
-    }
-    public ArrayList<String> getFieldNames(){
-        return new ArrayList<String>(fieldNames);
-    }
-    public void setFieldNames(ArrayList<String> s){
-        fieldNames=new ArrayList<>(s);
-    }
-    public String getField(int i){
-        return fields.get(i);
-    }
-    public String getValueAt(int index){
-        return fields.get(index);
-    }
-    public String getValueAt(String s){
-        if(fields.indexOf(s)==-1) return null;
-        return fields.get(fields.indexOf(s));
-    }
-    /**
-     * print comma separated versoin of all values in fields
-     */
-    public String toString(){
-        String rtn="";
-        for(String s:fields){
-            rtn+=s+", ";
-        }
-        if(rtn.length()>2) return rtn.substring(0,rtn.length()-2);
-        return rtn; //shouldn't ever be used
-    }
-    public void remove(int index) {
-        fields.remove(index);
-        if(fieldNames!=null) fieldNames.remove(index);
-    }
-    public void remove(String name) {
-        int ind=fieldNames.indexOf(name);
-        fieldNames.remove(ind);
-        fields.remove(ind);
-    }
+import java.util.List;
+
+/**
+ * This class is provided for you so you can concentrate on testing the Util.java file
+ * Modify at your own Risk!
+ * @author C Michaud / www.nebomusic.net
+ */ 
+public class Attributes {
+	
+	private ArrayList<String> fields = new ArrayList<String>();
+	
+	public Attributes (List<String> input) {
+		for (String s : input) {
+			String n = new String(s);
+			fields.add(n);
+		}
+	}
+	
+	public Attributes(Attributes a) {
+		for (String s : a.getValues()) {
+			fields.add(s);
+		}
+	}
+	
+	public ArrayList<String> getValues() {
+		return fields;
+	}
+
+	public ArrayList<String> getCopyValues() {
+		ArrayList<String> output = new ArrayList<String>();
+		
+		for (String s : fields) {
+			String n = new String(s);
+			output.add(n);
+		}
+		
+		return output;
+	}
+	
+	public String toString() {
+		String output = "";
+		
+		for (String s : fields) {
+			output += s + ",";
+		}
+		
+		return output;
+	}
+	
+	public void removeAttributeAtIndex(int i) {
+		fields.remove(i);
+	}
+	
+	public void removeAttributeByName(String name) {
+		fields.remove(name);
+	}
 }

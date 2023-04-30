@@ -88,7 +88,6 @@ public class TreeTest_J48 {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		// Create Instance and Test
 		TreeTest_J48 decisionTree = new TreeTest_J48();

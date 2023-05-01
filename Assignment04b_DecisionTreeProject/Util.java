@@ -13,10 +13,12 @@ public class Util
 	 * @return -(qlog2q + (1-q)log2(1-q)) Entropy Value
 	 * 
 	 */
-	public double getB(double q) {
+	public static double getB(double q) {
+		//TODO: Implement this function
 		// Values below are placeholders
 		//equation above uses log base 2 (log2q= log base 2 of q)
 		//Math.log() uses ln, which can be manipulated to give custom bases using lna/lnb where b is the desired base and a is the log being solved for
+		if(q>=1||q<=0) return 0;
 		return -1*(q*(Math.log(q)/Math.log(2))+(1-q)*(Math.log(1-q)/Math.log(2)));
 	}
 	
@@ -26,49 +28,60 @@ public class Util
 	 * @param attr a String with a field name
 	 * @return Remainder Value of DataSet data at index of Attribute
 	 */
-	public double getRemainder(DataSet data, String attr) {
-		ArrayList<attrHold> t=new ArrayList<>();
-		for(Record r:data.getData()) {
-		    String s=r.getAttributeAt(attr);
-		    int num=indAttr(t,s);
-		    boolean b=r.getClassification().equals("yes");
-		    if(num>1){
-		        if(b) t.get(num).addPos();
-		        else t.get(num).addNeg();
+	public static double getRemainder(DataSet data, String attr) {
+		ArrayList<Record> dta=data.getData(); //all data points
+		ArrayList<String> answers=new ArrayList<>();
+		ArrayList<Integer> numTrue=new ArrayList<>();
+		ArrayList<Integer> n=new ArrayList<>();
+		double remainder=0;
+		for(int i=0;i<dta.size();i++) {
+		    String attrLocal=dta.get(i).getAttributeAt(attr);
+		    if(!answers.contains(attrLocal)){
+		        answers.add(attrLocal);
+		        n.add(1);
+		        if(dta.get(i).getClassification().equals("Yes"))
+		            numTrue.add(1);
+		        else numTrue.add(0);
 		    }
-		    else t.add(new attrHold(s,b));
+		    else{
+		        int found=answers.indexOf(attrLocal);
+		        if(found>-1) 
+		            n.set(found, n.get(found)+1);
+		        if(dta.get(i).getClassification().equals("Yes")) 
+		            numTrue.set(found, numTrue.get(found)+1);
+		    }
 		}
-		double remainder = 0;
-		for(int i=0;i<t.size();i++){
-		    remainder+=(t.get(i).getTotal()/data.size())*getB(t.get(i).getPos()/data.size());
+		int d=answers.size();
+		int pn=data.size();
+		for(int j=0;j<d;j++){
+		    int pk=numTrue.get(j);
+		    int nk=n.get(j)-numTrue.get(j);
+            double q=(double)pk/(pk+nk);
+            double b=getB(q);
+            double beforeB=(double)(pk+nk)/pn;
+            double out=(double) beforeB*b;
+            remainder+=out;
 		}
 		return remainder;
 	}
-	public int indAttr(ArrayList<attrHold> attrs, String name){
-	    for(int i=0;i<attrs.size();i++) if(attrs.get(i).isEqual(name)) return i; //if the same name exists in the list return true
-	    return -1; //if it doesn't exst return false
-	}
-    public class attrHold{ //holds name, number of occurences, and number of postive instances of an attribute
-        String name; int num=0,pos=0;
-        public attrHold(String name, boolean b){this.name=name;num++;if(b)pos++;}
-        public void addNeg(){num++;}
-        public void addPos(){num++;pos++;}
-        public int getPos(){return pos;}
-        public int getTotal(){return num;}
-        public boolean isEqual(String n){return name.equals(n);}
-    }
 	/**
 	 * Returns the Information Gain from an Attribute at Index
 	 * @param data a DataSet of Records
 	 * @param attr a String with a field name
 	 * @return
 	 */
-	public double getGain(DataSet data, String attr) {
+	public static double getGain(DataSet data, String attr) {
 		double gain = 0;
-		/* Loop through each item in data 
-		   gain = gain + 
-		
-		*/
+		double remainder=getRemainder(data,attr);
+		ArrayList<Record> recs=data.getData();
+		int p=0;
+	    for(int i=0;i<recs.size();i++){
+	        if(recs.get(i).getClassification().equals("Yes")) p++;
+	    }
+	    double b=(double) p/data.size();
+	    double bigB=getB(b);
+	    gain+=bigB;
+	    gain-=remainder;
 		return gain;
 	}
 	
@@ -78,26 +91,74 @@ public class Util
 	 * @param attributes A list of attributes
 	 * @return
 	 */
-	public String getImportance(Attributes attributes, DataSet data) {
-		String out = "";
-		
+	public static String getImportance(Attributes attributes, DataSet data) {
+		ArrayList<String> atr=attributes.getCopyValues();
+		String out = atr.get(0);
+		double biggest=getGain(data,out);
+		for(int i=0;i<atr.size();i++){
+		    double temp=getGain(data,atr.get(i));
+		    if(temp>biggest){
+		        out=atr.get(i);
+		        biggest=temp;
+		    }
+		}
 		return out;
 	}
-		
+	//exclude index q
+	public static String getImportance(Attributes attributes, DataSet data, int q) {
+		ArrayList<String> atr=attributes.getCopyValues();
+		String out = atr.get(0);
+		double biggest=getGain(data,out);
+		for(int i=0;i<atr.size();i++){
+		    double temp=getGain(data,atr.get(i));
+		    if(q!=i&&temp>biggest){
+		        out=atr.get(i);
+		        biggest=temp;
+		    }
+		}
+		return out;
+	}
 	/**
 	 * Returns a String with the classification
 	 * Votes based on highest number of Classifications
 	 * @param data
 	 * @return
 	 */
-	public String getPluralityValue(DataSet data) {
-		String out = "";
-		
-		return out;
-		
+	public static String getPluralityValue(DataSet data) {
+		int y=0,n=0;
+		for(Record r:data.getData()){
+		    if(r.getClassification().equals("Yes")) y++;
+		    else n++;
+		}
+		if(y>=n) return "Yes";
+		return "No"; 
 	}
-
-	
-	
-
+	public static ArrayList<String> getPossibleReturn(DataSet data, String attr){
+		ArrayList<String> rtn=new ArrayList<>();
+		for(Record r:data.getData()){
+			String hold=r.getAttributeAt(attr);
+			if(rtn.indexOf(hold)==-1) rtn.add(hold);
+		}
+		return rtn;
+	}
+	/**
+	 * returns true if a given answer to a question always returns a single answer
+	 * @param d
+	 * @param attr
+	 * @param answer
+	 * @return
+	 */
+	public boolean isAlways(DataSet d, String attr, String answer){
+		ArrayList<Record> data=d.getData();
+		String val=null;
+		for(int i=0;i<data.size();i++){
+			if(val==null&&data.get(i).getAttributeAt(attr).equals(answer)) val=data.get(0).getClassification(); //set initial value on first encounter with answer
+			if(val!=null&&data.get(i).getAttributeAt(attr).equals(answer)&&!data.get(i).getClassification().equals(val)) return false; //if a part has the same answer but not the same class, return false
+		}
+		return true;
+	}
+	public String alwaysAnswer(DataSet d, String attr, String answer){
+		for(Record r:d.getData()) if(r.getAttributeAt(attr).equals(answer)) return r.getClassification();
+		return null;
+	}
 }

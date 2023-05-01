@@ -22,19 +22,21 @@ public class Attributes {
 			fields.add(s);
 		}
 	}
-	
+	public int size(){
+		return fields.size();
+	}
 	public ArrayList<String> getValues() {
 		return fields;
 	}
-
+	public int indexOf(String s){
+		return fields.indexOf(s);
+	}
 	public ArrayList<String> getCopyValues() {
 		ArrayList<String> output = new ArrayList<String>();
-		
 		for (String s : fields) {
 			String n = new String(s);
 			output.add(n);
 		}
-		
 		return output;
 	}
 	
@@ -51,7 +53,11 @@ public class Attributes {
 	public void removeAttributeAtIndex(int i) {
 		fields.remove(i);
 	}
-	
+	public Attributes removeAndCopy(String s){
+		Attributes rtn=new Attributes(this);
+		rtn.removeAttributeByName(s);
+		return rtn;
+	}
 	public void removeAttributeByName(String name) {
 		fields.remove(name);
 	}

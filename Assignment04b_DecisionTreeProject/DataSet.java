@@ -66,12 +66,17 @@ public class DataSet {
     		e.printStackTrace();
     	}
 	}
-	
+	public DataSet(DataSet d){
+		data=new ArrayList<>(d.data);
+		attrs=new ArrayList<>(d.attrs);
+	}
 	public void addRecord(Record r) {
 		data.add(r);
 	}
 	
-	
+	public ArrayList<Record> getCopyData(){
+		return new ArrayList<>(data);
+	}
 	public DataSet removeAtributeByName(String name) {
 		DataSet output = new DataSet();
 		
@@ -85,7 +90,9 @@ public class DataSet {
 		
 		return output;
 	}
-	
+	public void removePoint(int i){
+		data.remove(i);
+	}
 	public ArrayList<Record> getData() {
 		return data;
 	}

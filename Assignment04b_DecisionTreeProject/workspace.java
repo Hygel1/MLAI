@@ -26,8 +26,8 @@ public class workspace{
         String classification=root.classify(test);
         System.out.println("Class: "+classification+"\n");
 		System.out.println(Util.getImportance(new Attributes(data.getAttributeList()), data));
-		DecisionTree dT=new DecisionTree();
-		dT.decisionTreeLearning(path, 10);
+		DecisionTree dT=new DecisionTree(path,10); //make new tree with training data
+        System.out.println(dT.testTree(path));
 
     }
 }

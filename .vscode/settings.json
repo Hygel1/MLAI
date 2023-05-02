@@ -9,6 +9,7 @@
         "Assignment00_LibraryTest",
         "Assignment03_BreadthFirstSearch",
         "Assignment04a_DecisionTreeProject",
-        "Assignment04b_DecisionTreeProject"
+        "Assignment04b_DecisionTreeProject",
+        "Assignment05_KNN"
     ]
 }

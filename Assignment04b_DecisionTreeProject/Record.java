@@ -38,7 +38,7 @@ public class Record {
 	
 	public String getAttributeAt(String attr) {
 		int index = fieldNames.indexOf(attr);
-		String out = attributes.getCopyValues().get(index);
+		String out = attributes.getValues().get(index);
 		return out;
 	}
 	

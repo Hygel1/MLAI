@@ -5,9 +5,7 @@
  */ 
 import java.util.ArrayList;
 import java.util.List;
-
 public class Record {
-	
 	private Attributes attributes;
 	private String classification = "";
 	private ArrayList<String> fieldNames = new ArrayList<String>();

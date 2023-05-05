@@ -28,6 +28,5 @@ public class workspace{
 		System.out.println(Util.getImportance(new Attributes(data.getAttributeList()), data));
 		DecisionTree dT=new DecisionTree(path,10); //make new tree with training data
         System.out.println(dT.testTree(path));
-
     }
 }

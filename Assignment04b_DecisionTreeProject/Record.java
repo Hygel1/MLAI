@@ -22,7 +22,11 @@ public class Record {
 		classification = c;
 		
 	}
-	
+	public void removeByName(String name){
+		int n=fieldNames.indexOf(name);
+		fieldNames.remove(n);
+		attributes.removeAttributeAtIndex(n);
+	}
 	public Attributes getAttributes() {
 		return attributes;
 	}

@@ -77,11 +77,11 @@ public class DataSet {
 	public ArrayList<Record> getCopyData(){
 		return new ArrayList<>(data);
 	}
-	public DataSet removeAtributeByName(String name) {
-		DataSet output = new DataSet();
-		ArrayList<String> fieldNamesMod=new ArrayList<>(attrs);
-		fieldNamesMod.remove(name);
-		for (Record r : data) {
+	public void removeAtributeByName(String name) {
+		//DataSet output = new DataSet();
+		//ArrayList<String> fieldNamesMod=new ArrayList<>(attrs);
+		//fieldNamesMod.remove(name);
+		/*for (Record r : data) {
 			String c =r.getClassification();
 			ArrayList<String> attr = r.getAttributes().getCopyValues();
 			attr.remove(name);
@@ -89,9 +89,10 @@ public class DataSet {
 			nr.setFieldNames(fieldNamesMod);
 			output.addRecord(nr);
 		}
-
-		
-		return output;
+		*/
+		attrs.remove(name);
+		for(Record r:data) r.removeByName(name);
+		//return output;
 	}
 	public void removePoint(int i){
 		data.remove(i);

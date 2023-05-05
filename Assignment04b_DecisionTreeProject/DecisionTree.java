@@ -54,7 +54,8 @@ public class DecisionTree{
                 Node hold=new Node(Util.getImportance(fieldNames, data, fieldNames.indexOf(node.getName())),1); //node to be added as a branch
                 node.addBranch(hold, pR.get(i));
                 Attributes a=fieldNames.removeAndCopy(mI); //remove last considered fieldName
-                dT=dT.removeAtributeByName(mI); //remove last considered question
+                //dT=
+                dT.removeAtributeByName(mI); //remove last considered question
                 String s=Util.getImportance(a, dT); //get next most important question to be surveyed (from modified set, not considering the last question)
                 setBranches(dT,hold,a,s);
             }

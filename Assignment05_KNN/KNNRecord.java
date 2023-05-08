@@ -43,6 +43,9 @@ public class KNNRecord {
     public void setFieldNames(ArrayList<String> fN){
         fieldNames=new ArrayList<>(fN);
     }
+    public ArrayList<Double> getValues(){
+        return values;
+    }
     /**
      * classification + values
      */

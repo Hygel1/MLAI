@@ -1,6 +1,6 @@
 public class Bird {
-    Attributes x,y;
-    public Bird(Attributes a, Attributes b){
+    KNNRecord x,y;
+    public Bird(KNNRecord a, KNNRecord b){
         
     }
 }

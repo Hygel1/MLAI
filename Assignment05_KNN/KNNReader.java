@@ -11,8 +11,8 @@ public class KNNReader
     public static String INPUT_FILE_NAME = "Assignment05_KNN\\data\\Prob20Large.txt";
     
     public static void main(String[] args) {
-        ArrayList<Record> data=readData(INPUT_FILE_NAME);
-        for(Record a:data) System.out.println(a);
+        ArrayList<KNNRecord> data=readData(INPUT_FILE_NAME);
+        for(KNNRecord a:data) System.out.println(a);
     }
     public static void readDataDef(){
         try {
@@ -40,8 +40,8 @@ public class KNNReader
             e.printStackTrace();
         }
     }
-    public static ArrayList<Record> readData(String path){
-        ArrayList<Record> attr=new ArrayList<>();
+    public static ArrayList<KNNRecord> readData(String path){
+        ArrayList<KNNRecord> attr=new ArrayList<>();
         try{
             File inFile = new File(path);
             FileReader fr = new FileReader(inFile);
@@ -52,7 +52,7 @@ public class KNNReader
             top[0]=Integer.parseInt(h[0]);top[1]=Integer.parseInt(h[1]);
 
             for(int i=0;i<numVals;i++){
-                attr.add(new Record(br.readLine().split(" ")));
+                attr.add(new KNNRecord(br.readLine().split(" ")));
             }
             fr.close();
             br.close();

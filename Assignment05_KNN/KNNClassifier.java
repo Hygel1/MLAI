@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 public class KNNClassifier {
-    private ArrayList<Record> data;
+    private ArrayList<KNNRecord> data;
     private VoteCounter vC;
     /**
      * builds a classifier with default (empty) data and voteCounter
@@ -13,7 +13,7 @@ public class KNNClassifier {
      * builds a classifier with a given set of data and a fresh voteCounter
      * @param data
      */
-    public KNNClassifier(ArrayList<Record> data){
+    public KNNClassifier(ArrayList<KNNRecord> data){
         data=new ArrayList<>(data);
         vC=new VoteCounter();
     }
@@ -28,7 +28,7 @@ public class KNNClassifier {
      * add record to data list
      * @param r
      */
-    public void addRecord(Record r){
+    public void addRecord(KNNRecord r){
         data.add(r);
     }
     /**

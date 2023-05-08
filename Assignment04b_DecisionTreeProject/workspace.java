@@ -17,16 +17,17 @@ public class workspace{
         root.addBranch(leaf2, "Some");
         root.addBranch(node1, "Full");
 
-        String path="Assignment04b_DecisionTreeProject\\data\\Restaurant_Data.csv";
+        String path="Assignment04b_DecisionTreeProject\\data\\iris_data\\iris_train.csv";
         DataSet data=new DataSet(path, 10);
 
         Record test=data.getDataAtIndex(0);
         System.out.println(test.getAttributes());
 
-        String classification=root.classify(test);
-        System.out.println("Class: "+classification+"\n");
+        //String classification=root.classify(test);
+        //System.out.println("Class: "+classification+"\n");
 		System.out.println(Util.getImportance(new Attributes(data.getAttributeList()), data));
 		DecisionTree dT=new DecisionTree(path,10); //make new tree with training data
-        System.out.println(dT.testTree(path));
+        String path2="Assignment04b_DecisionTreeProject\\data\\iris_data\\iris_test.csv";
+        System.out.println(dT.testTree(path2));
     }
 }

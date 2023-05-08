@@ -152,13 +152,17 @@ public class Util
 		ArrayList<Record> data=d.getData();
 		String val=null;
 		for(int i=0;i<data.size();i++){
-			if(val==null&&data.get(i).getAttributeAt(attr).equals(answer)) val=data.get(i).getClassification(); //set initial value on first encounter with answer
-			else if(val!=null&&data.get(i).getAttributeAt(attr).equals(answer)&&!data.get(i).getClassification().equals(val)) return false; //if a part has the same answer but not the same class, return false
+			if(val==null&&data.get(i).getAttributeAt(attr).equals(answer)) 
+				val=data.get(i).getClassification(); //set initial value on first encounter with answer
+			else if(val!=null&&data.get(i).getAttributeAt(attr).equals(answer)&&!data.get(i).getClassification().equals(val)) 
+				return false; //if a part has the same answer but not the same class, return false
 		}
 		return true;
 	}
 	public static String alwaysAnswer(DataSet d, String attr, String answer){
-		for(Record r:d.getData()) if(r.getAttributeAt(attr).equals(answer)) return r.getClassification();
+		for(Record r:d.getData()) 
+			if(r.getAttributeAt(attr).equals(answer)) 
+				return r.getClassification();
 		return null;
 	}
 }

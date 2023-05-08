@@ -67,7 +67,7 @@ public class DataSet {
     	}
 	}
 	public DataSet(DataSet d){
-		for(Record r:d.data) data.add(r);
+		for(Record r:d.data) data.add(new Record(r));
 		for(String s:d.attrs) attrs.add(s);
 	}
 	public void addRecord(Record r) {
@@ -77,7 +77,7 @@ public class DataSet {
 	public ArrayList<Record> getCopyData(){
 		return new ArrayList<>(data);
 	}
-	public void removeAtributeByName(String name) {
+	public DataSet removeAtributeByName(String name) {
 		//DataSet output = new DataSet();
 		//ArrayList<String> fieldNamesMod=new ArrayList<>(attrs);
 		//fieldNamesMod.remove(name);
@@ -90,9 +90,10 @@ public class DataSet {
 			output.addRecord(nr);
 		}
 		*/
-		attrs.remove(name);
-		for(Record r:data) r.removeByName(name);
-		//return output;
+		DataSet d=new DataSet(this);
+		d.attrs.remove(name);
+		for(Record r:d.data) r.removeByName(name);
+		return d;
 	}
 	public void removePoint(int i){
 		data.remove(i);

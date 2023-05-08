@@ -9,16 +9,28 @@ public class Record {
 	private Attributes attributes;
 	private String classification = "";
 	private ArrayList<String> fieldNames = new ArrayList<String>();
-	
+	/**
+	 * creates a new Record instance with a given Attributes set
+	 * @param a
+	 * @param c
+	 */
 	public Record(Attributes a, String c) {
-		attributes = a;
+		attributes = new Attributes(a);
 		classification = c;
 	}
-	
+	/**
+	 * creates a new Record instance using a list of Strings to create attributes
+	 * @param a list of Strings to add to Attributes
+	 * @param c classification String
+	 */
 	public Record(List<String> a, String c) {
 		attributes = new Attributes(a);
 		classification = c;
-		
+	}
+	public Record(Record r){
+		attributes=new Attributes(r.attributes);
+		classification=r.classification;
+		fieldNames=new ArrayList<>(r.fieldNames);
 	}
 	public void removeByName(String name){
 		int n=fieldNames.indexOf(name);

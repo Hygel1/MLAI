@@ -36,20 +36,25 @@ public class DecisionTree{
      * @param fieldNames list of all fieldNames
      * @param mI most important fieldName (question) to be checked
      */
+    int num=0;
     private void setBranches(DataSet data, Node node, Attributes fieldNames, String mI){
-        ArrayList<String> pR=Util.getPossibleReturn(data, node.getName());
+        ArrayList<String> pR=Util.getPossibleReturn(data, mI);
         if(fieldNames.size()<2){
             for(String p:pR){
-                node.addBranch(new Node(Util.getPluralityValue(data),1),p);
+                node.addBranch(new Node(Util.getPluralityValue(data)),p);
             }
         }
+        else{ num++;
         for(int i=0;i<pR.size();i++){ //runs for each possible answer to the given question
             if(Util.isAlways(data, mI, pR.get(i)))
                 node.addBranch(new Node(Util.alwaysAnswer(data, mI, pR.get(i))), pR.get(i)); //if there is only ever one result when this answer is given, return that answer
             else{
                 DataSet dT=new DataSet(data);
                 for(int n=0;n<dT.size();n++){ //removes all instances where the answer doesn't match up, surveys only matching data
-                    if(!dT.getDataAtIndex(n).getAttributeAt(mI).equals(pR.get(i))){dT.removePoint(n);n--;};
+                    if(!dT.getDataAtIndex(n).getAttributeAt(mI).equals(pR.get(i))){
+                        dT.removePoint(n);
+                        n--;
+                    }
                 }
                 Node hold=new Node(Util.getImportance(fieldNames, data, fieldNames.indexOf(node.getName())),1); //node to be added as a branch
                 node.addBranch(hold, pR.get(i));
@@ -58,7 +63,8 @@ public class DecisionTree{
                 String s=Util.getImportance(a, dT); //get next most important question to be surveyed (from modified set, not considering the last question)
                 setBranches(dT,hold,a,s);
              }
-        }
+        }}
+        System.out.println(num);
     }
     /**
      *moves through build node tree with given data to find solution 
@@ -77,7 +83,8 @@ public class DecisionTree{
         DataSet data=new DataSet(path, classIndex); //parse data from file
         int right=0,wrong=0; //correct/incorrect classification counter
         for(Record r:data.getData()){ //for each collection of data in the file...
-            if(makeDecision(r).equals(r.getClassification())) right++; //if the classification is correct, add to correct counter
+            if(makeDecision(r)
+            .equals(r.getClassification())) right++; //if the classification is correct, add to correct counter
             else wrong++; //if the classification is wrong, add to incorrect counter
         }
         return "Accuracy: "+(double)right/wrong+"%"; //calculate accuracy and return

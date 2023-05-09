@@ -43,7 +43,7 @@ public class DecisionTree{
                 node.addBranch(new Node(Util.getPluralityValue(data)),p);
             }
         }
-        else{ 
+        else{
             for(int i=0;i<pR.size();i++){ //runs for each possible answer to the given question
                 if(Util.isAlways(data, mI, pR.get(i)))
                     node.addBranch(new Node(Util.alwaysAnswer(data, mI, pR.get(i))), pR.get(i)); //if there is only ever one result when this answer is given, return that answer

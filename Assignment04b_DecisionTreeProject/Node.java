@@ -25,6 +25,8 @@ public class Node {
         if(branches.size()<1) return output;
         String value=instance.getAttributeAt(attribute);
         int branchIndex=values.indexOf(value);
+        if(branchIndex==-1)
+        branchIndex=-1;
         return branches.get(branchIndex).classify(instance);
     }
 }

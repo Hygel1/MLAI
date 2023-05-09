@@ -16,8 +16,8 @@ public class workspace{
         root.addBranch(leaf1,"None");
         root.addBranch(leaf2, "Some");
         root.addBranch(node1, "Full");
-
-        String path="Assignment04b_DecisionTreeProject\\data\\iris_data\\iris_train.csv";
+        //doesn't work with data involving numbers in an unbounded set, needs to have defined answers in training data
+        String path="Assignment04b_DecisionTreeProject\\data\\diabetes_data\\diabetes_data_train.csv";
         DataSet data=new DataSet(path, 10);
 
         Record test=data.getDataAtIndex(0);
@@ -27,7 +27,7 @@ public class workspace{
         //System.out.println("Class: "+classification+"\n");
 		System.out.println(Util.getImportance(new Attributes(data.getAttributeList()), data));
 		DecisionTree dT=new DecisionTree(path,10); //make new tree with training data
-        String path2="Assignment04b_DecisionTreeProject\\data\\iris_data\\iris_test.csv";
+        String path2="Assignment04b_DecisionTreeProject\\data\\diabetes_data\\diabetes_data_test.csv";
         System.out.println(dT.testTree(path2));
     }
 }

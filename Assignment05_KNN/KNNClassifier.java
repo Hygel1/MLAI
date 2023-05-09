@@ -14,7 +14,7 @@ public class KNNClassifier {
      * @param data
      */
     public KNNClassifier(ArrayList<KNNRecord> data){
-        data=new ArrayList<>(data);
+        this.data=new ArrayList<>(data);
         vC=new VoteCounter();
     }
     /**

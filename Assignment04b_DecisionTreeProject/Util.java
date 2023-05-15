@@ -11,11 +11,8 @@ public class Util
 	 * Be careful!  You can't get values for 1 and 0
 	 * @param q double in range of (0, 1)
 	 * @return -(qlog2q + (1-q)log2(1-q)) Entropy Value
-	 * 
 	 */
 	public static double getB(double q) {
-		//TODO: Implement this function
-		// Values below are placeholders
 		//equation above uses log base 2 (log2q= log base 2 of q)
 		//Math.log() uses ln, which can be manipulated to give custom bases using lna/lnb where b is the desired base and a is the log being solved for
 		if(q>=1||q<=0) return 0;

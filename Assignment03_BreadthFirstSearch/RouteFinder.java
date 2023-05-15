@@ -1,13 +1,12 @@
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Currency;
 import java.util.PriorityQueue;
 import java.io.File;
 import java.util.Scanner;
 public class RouteFinder {
     static int stepCounter=0;
     public static void main(String[] args){
-        ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
+        //ArrayList<City> data=readMapData("Assignment02_DataAnalysis\\MysteryData.txt");
         //MAZE DATA TESTING!!!
         /*ArrayList<City> mazeData=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze03-small.txt");
         ArrayList<City> mazeData1=readMazeData("Assignment03_BreadthFirstSearch\\dataFiles\\maze04-small.txt");
@@ -177,7 +176,7 @@ public class RouteFinder {
             //if(!s.nextLine().equals("maze")) throw new Exception("FileTypeException");
             //s.nextLine();
             String[] holdVal;
-            String type=s.nextLine();
+            //String type=s.nextLine();
             String[] bounds=s.nextLine().split(" ");
             mazeDimensions[0]=Integer.parseInt(bounds[0]);
             mazeDimensions[1]=Integer.parseInt(bounds[1]);

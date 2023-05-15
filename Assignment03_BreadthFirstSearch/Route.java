@@ -99,12 +99,12 @@ public class Route extends Stack<Point> implements Comparable<Route>{
         for(int i=0;i<peek().relSize();i++) order[i]=i;
         for(int i=0;i<peek().relSize();i++){
             int small=i;
-            double minpy=Math.sqrt(Math.abs((peek().getRel(i).getp1()-goal.getp1())*(peek().getRel(i).getp1()-goal.getp1()))+Math.abs((peek().getRel(i).getp2()-goal.getp2())*(peek().getRel(i).getp2()-goal.getp2())));
+            //double minpy=Math.sqrt(Math.abs((peek().getRel(i).getp1()-goal.getp1())*(peek().getRel(i).getp1()-goal.getp1()))+Math.abs((peek().getRel(i).getp2()-goal.getp2())*(peek().getRel(i).getp2()-goal.getp2())));
             for(int n=i;n<peek().relSize();n++){
-                double py=Math.sqrt(Math.abs((peek().getRel(n).getp1()-goal.getp1())*(peek().getRel(n).getp1()-goal.getp1()))+Math.abs((peek().getRel(n).getp2()-goal.getp2())*(peek().getRel(n).getp2()-goal.getp2())));
+                //double py=Math.sqrt(Math.abs((peek().getRel(n).getp1()-goal.getp1())*(peek().getRel(n).getp1()-goal.getp1()))+Math.abs((peek().getRel(n).getp2()-goal.getp2())*(peek().getRel(n).getp2()-goal.getp2())));
                 if(peek().getRelatedDistance(n)<peek().getRelatedDistance(small)){
                     small=n;
-                    minpy=Math.sqrt(Math.abs((peek().getRel(small).getp1()-goal.getp1())*(peek().getRel(small).getp1()-goal.getp1()))+Math.abs((peek().getRel(small).getp2()-goal.getp2())*(peek().getRel(small).getp2()-goal.getp2())));
+                    //minpy=Math.sqrt(Math.abs((peek().getRel(small).getp1()-goal.getp1())*(peek().getRel(small).getp1()-goal.getp1()))+Math.abs((peek().getRel(small).getp2()-goal.getp2())*(peek().getRel(small).getp2()-goal.getp2())));
                 }
             }
             int a=order[i];

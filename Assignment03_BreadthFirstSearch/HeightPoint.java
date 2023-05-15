@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 public class HeightPoint extends Point{
     double height;
     public HeightPoint(int x, int y, double height){

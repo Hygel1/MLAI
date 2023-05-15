@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 public class Node {
     private String attribute="";
-    private int attributeIndex=-1;
+    //private int attributeIndex=-1; not necesary
     private ArrayList<Node> branches=new ArrayList<>(); //brach nodes
     private ArrayList<String> values=new ArrayList<>(); //possible returned values
     private String output="";
@@ -9,7 +9,7 @@ public class Node {
     public Node(){}
     public Node(String attr, int index){ //builds a node with connections
         attribute=attr;
-        attributeIndex=index;
+        //attributeIndex=index;
     }
     public Node(String out){
         output=out;

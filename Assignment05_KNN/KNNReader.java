@@ -26,10 +26,10 @@ public class KNNReader
             
             File inFile = new File(path);
             Scanner s=new Scanner(inFile);
-            int c=0;
+            //int c=0;
             s.nextLine(); //skip first line
             while(s.hasNextLine()){
-                c++;
+                //c++;
                 train.add(new KNNRecord(s.nextLine().split(";"))); //split values by semicolon
             }
             for(int i=0;i<100;i++){
